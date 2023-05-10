@@ -3,7 +3,8 @@ package com.boardProject.exception.errorResponse;
 import com.boardProject.exception.businessLogicException.ExceptionCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
@@ -28,8 +29,8 @@ public class ErrorResponse {
         this.violationErrors = violationErrors;
     }
 
-    public static ErrorResponse of(BindingResult bindingResult) {
-        return new ErrorResponse(FieldError.of(bindingResult), null);
+    public static ErrorResponse of(BindException bindException) {
+        return new ErrorResponse(FieldError.of(bindException), null);
     }
 
     public static ErrorResponse of(Set<ConstraintViolation<?>> violations) {
@@ -49,26 +50,37 @@ public class ErrorResponse {
     }
 
     @Getter
-    public static class FieldError {
+    private static class FieldError{
+        private FieldSource source; // 추가 코드 1 (예외 발생지에 대한 정보 추가)
         private String field;
         private Object rejectedValue;
         private String reason;
 
-        private FieldError(String field, Object rejectedValue, String reason) {
+        public enum FieldSource{ // 추가 코드 2
+            QUERY_PARAMETER("Query Parameter"),
+            REQUEST_BODY("Request Body");
+            @Getter
+            private String source;
+            FieldSource(String source) {
+                this.source = source;
+            }
+        }
+        public FieldError(FieldSource source, String field, Object rejectedValue, String reason) {
+            this.source = source; // 추가 코드 3
             this.field = field;
             this.rejectedValue = rejectedValue;
             this.reason = reason;
         }
-
-        public static List<FieldError> of(BindingResult bindingResult) {
+        public static List<FieldError> of(BindException bindException){
             final List<org.springframework.validation.FieldError> fieldErrors =
-                                                        bindingResult.getFieldErrors();
+                    bindException.getFieldErrors();
             return fieldErrors.stream()
-                    .map(error -> new FieldError(
-                            error.getField(),
-                            error.getRejectedValue() == null ?
-                                            "" : error.getRejectedValue().toString(),
-                            error.getDefaultMessage()))
+                    .map(e-> new FieldError(
+                            bindException instanceof MethodArgumentNotValidException ? // 추가 코드 4
+                                    FieldSource.QUERY_PARAMETER : FieldSource.REQUEST_BODY ,
+                            e.getField(),
+                            e.getRejectedValue() == null ? "" : e.getRejectedValue().toString(),
+                            e.getDefaultMessage()))
                     .collect(Collectors.toList());
         }
     }

@@ -5,7 +5,7 @@
 - [x] 공통 Dto
 - [ ] 테스트작성
 - [ ] Sending email to manager when error got
-- 
+
 ## 회원 기능
 - [x] Entity 작성
   (관리자 및 회원 상태 추가)
