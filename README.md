@@ -1,7 +1,8 @@
 # 게시판 프로젝트
 
 ## 공통 기능
-- [ ] 예외처리
+- [x] 예외처리
+- [x] 공통 Dto
 - [ ] 테스트작성
 
 ## 회원 기능
@@ -13,7 +14,8 @@
 
 ### 부가 기능
 - [ ] 이메일 verification, social login
-
+- [ ] Search members, not all of them
+- [ ] Sending email to manager when error got
 
 ## 게시판 기능
 - [ ] Entity 작성
