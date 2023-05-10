@@ -16,6 +16,7 @@
 - [ ] 이메일 verification, social login
 - [ ] Search members, not all of them
 - [ ] Sending email to manager when error got
+- [ ] Photo upload for profile
 
 ## 게시판 기능
 - [ ] Entity 작성
