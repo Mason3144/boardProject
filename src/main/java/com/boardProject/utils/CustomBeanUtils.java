@@ -1,4 +1,4 @@
-package com.codestates.utils;
+package com.boardProject.utils;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
