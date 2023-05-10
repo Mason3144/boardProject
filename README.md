@@ -4,18 +4,18 @@
 - [x] 예외처리
 - [x] 공통 Dto
 - [ ] 테스트작성
-
+- [ ] Sending email to manager when error got
+- 
 ## 회원 기능
-- [ ] Entity 작성
+- [x] Entity 작성
   (관리자 및 회원 상태 추가)
-- [ ] DTO 작성
+- [x] DTO 작성
 - [ ] 기본 CRUD
  
 
 ### 부가 기능
 - [ ] 이메일 verification, social login
 - [ ] Search members, not all of them
-- [ ] Sending email to manager when error got
 - [ ] Photo upload for profile
 
 ## 게시판 기능
