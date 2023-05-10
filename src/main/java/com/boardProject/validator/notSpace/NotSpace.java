@@ -1,4 +1,4 @@
-package com.codestates.validator;
+package com.boardProject.validator.notSpace;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

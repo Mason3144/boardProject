@@ -1,4 +1,4 @@
-package com.codestates.validator;
+package com.boardProject.validator.notSpace;
 
 import org.springframework.util.StringUtils;
 
