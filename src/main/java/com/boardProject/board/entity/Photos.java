@@ -1,2 +1,4 @@
-package com.boardProject.board.entity;public class Photos {
+package com.boardProject.board.entity;
+
+public class Photos {
 }
