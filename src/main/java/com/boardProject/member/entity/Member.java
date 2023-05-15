@@ -25,9 +25,6 @@ public class Member extends Auditable {
     private String password;
     @Enumerated
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
-    @Enumerated
-    private MemberAuthority memberAuthority = MemberAuthority.MEMBER;
-
 
     public enum MemberStatus{
         MEMBER_ACTIVE("활동중"),
@@ -40,15 +37,4 @@ public class Member extends Auditable {
             this.status = status;
         }
     }
-    public enum MemberAuthority{
-        MEMBER("Member"),
-        MANAGER("Manager");
-        @Getter
-        private String authority;
-
-        MemberAuthority(String authority) {
-            this.authority = authority;
-        }
-    }
-
 }

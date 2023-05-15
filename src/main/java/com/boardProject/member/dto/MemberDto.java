@@ -47,6 +47,5 @@ public class MemberDto {
         private String email;
         private String name;
         private Member.MemberStatus memberStatus;
-        private Member.MemberAuthority memberAuthority;
     }
 }
