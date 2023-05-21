@@ -1,9 +1,18 @@
-package com.codestates.auth;
+package com.boardProject.auth.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 public class LoginDto {
-    private String username;
-    private String password;
+    @Getter
+    public static class Request{
+        private String username;
+        private String password;
+    }
+    @Getter
+    @Builder
+    public static class Response{
+        private String email;
+        private String name;
+    }
 }

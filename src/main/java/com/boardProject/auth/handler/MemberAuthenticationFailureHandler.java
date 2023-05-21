@@ -1,6 +1,6 @@
-package com.codestates.auth.handler;
+package com.boardProject.auth.handler;
 
-import com.codestates.response.ErrorResponse;
+import com.boardProject.exception.errorResponse.ErrorResponse;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,12 +25,12 @@ public class MemberAuthenticationFailureHandler implements AuthenticationFailure
     }
 
     private void sendErrorResponse(HttpServletResponse response, Exception exception) throws IOException {
-        Gson gson = new Gson();     // (2-1)
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage()); // (2-2)
+        Gson gson = new Gson();
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, exception.getMessage());
 
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);    // (2-3)
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());          // (2-4)
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));   // (2-5)
+        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
     }
 }

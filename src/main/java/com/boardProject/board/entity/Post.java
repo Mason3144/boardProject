@@ -32,7 +32,7 @@ public class Post extends Auditable {
     private Member member;
     @OneToMany(mappedBy = "post")
     private List<Likes> likes = new LinkedList<>();
-    @OneToOne(mappedBy = "Post")
+    @OneToOne(mappedBy = "post")
     private Content content;
 
     public void setContent(Content content){

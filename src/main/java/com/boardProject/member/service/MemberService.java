@@ -1,10 +1,12 @@
 package com.boardProject.member.service;
 
+import com.boardProject.auth.utils.CustomAuthorityUtils;
 import com.boardProject.exception.businessLogicException.BusinessLogicException;
 import com.boardProject.exception.businessLogicException.ExceptionCode;
 import com.boardProject.member.entity.Member;
 import com.boardProject.member.repository.MemberRepository;
 import com.boardProject.utils.CustomBeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,17 +17,25 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository repository;
     private final CustomBeanUtils<Member> customBeanUtils;
+    private final CustomAuthorityUtils customAuthorityUtils;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository repository, CustomBeanUtils<Member> customBeanUtils) {
+    public MemberService(MemberRepository repository, CustomBeanUtils<Member> customBeanUtils, CustomAuthorityUtils customAuthorityUtils, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.customBeanUtils = customBeanUtils;
+        this.customAuthorityUtils = customAuthorityUtils;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Member createMember(Member member){
         // email verification needed
         // social login create member needed
-
         existsEmailChecker(member.getEmail());
+
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
+        member.setSocialLogin(false);
+
         return repository.save(member);
     }
 

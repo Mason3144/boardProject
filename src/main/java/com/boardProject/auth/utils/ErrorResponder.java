@@ -1,6 +1,6 @@
-package com.codestates.auth.utils;
+package com.boardProject.auth.utils;
 
-import com.codestates.response.ErrorResponse;
+import com.boardProject.exception.errorResponse.ErrorResponse;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

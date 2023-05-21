@@ -1,4 +1,4 @@
-package com.codestates.auth;
+package com.boardProject.auth.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;

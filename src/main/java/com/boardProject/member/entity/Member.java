@@ -11,9 +11,7 @@ import lombok.Setter;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @NoArgsConstructor
@@ -27,11 +25,15 @@ public class Member extends Auditable {
     private String email;
     @Column(nullable = false, length = 50)
     private String name;
-    @Column(nullable = false,length = 50)
+    @Column(length = 100) //password는 암호화되어 저장되기 때문에 열의 길이는 100으로 지정
     private String password;
+    @Column(nullable = false)
+    private boolean isSocialLogin;
     @Enumerated
     @Column(nullable = false, length = 20)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
     @OneToMany(mappedBy = "member")
@@ -56,5 +58,17 @@ public class Member extends Auditable {
         MemberStatus(String status) {
             this.status = status;
         }
+    }
+
+    public Map<String,Object> getMember(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("memberId", this.getMemberId());
+        map.put("email", this.getEmail());
+        map.put("name", this.getName());
+        map.put("password", this.getPassword());
+        map.put("socialLogin", this.isSocialLogin());
+        map.put("memberStatus", this.getMemberStatus());
+        map.put("roles", this.getRoles());
+        return map;
     }
 }

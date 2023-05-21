@@ -3,6 +3,8 @@ package com.boardProject.exception.businessLogicException;
 import lombok.Getter;
 
 public enum ExceptionCode {
+    MEMBER_SLEEP(400, "Member sleep"),
+    MEMBER_QUIT(400, "Member quit"),
     MEMBER_NOT_FOUND(404, "Member not found"),
     MEMBER_EXISTS(409, "Member exists"),
     COFFEE_NOT_FOUND(404, "Coffee not found"),

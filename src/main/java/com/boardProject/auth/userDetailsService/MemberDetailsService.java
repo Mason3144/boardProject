@@ -1,10 +1,10 @@
-package com.codestates.auth;
+package com.boardProject.auth.userDetailsService;
 
-import com.codestates.exception.BusinessLogicException;
-import com.codestates.exception.ExceptionCode;
-import com.codestates.member.entity.Member;
-import com.codestates.member.repository.MemberRepository;
-import org.springframework.security.core.AuthenticationException;
+import com.boardProject.auth.utils.CustomAuthorityUtils;
+import com.boardProject.exception.businessLogicException.BusinessLogicException;
+import com.boardProject.exception.businessLogicException.ExceptionCode;
+import com.boardProject.member.entity.Member;
+import com.boardProject.member.repository.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,22 +26,23 @@ public class MemberDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            return checkMemberStatus(username);
-    }
-    private UserDetails checkMemberStatus(String username){
         Optional<Member> optionalMember = repository.findByEmail(username);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        if(findMember.getMemberStatus() == Member.MemberStatus.MEMBER_SLEEP) throw new BusinessLogicException(ExceptionCode.MEMBER_SLEEP);
-        else if(findMember.getMemberStatus() == Member.MemberStatus.MEMBER_QUIT) throw new BusinessLogicException(ExceptionCode.MEMBER_QUIT);
+        checkMemberStatus(findMember);
 
         return new MemberDetails(findMember);
+    }
+    private void checkMemberStatus(Member findMember){
+        if(findMember.getMemberStatus() == Member.MemberStatus.MEMBER_SLEEP) throw new BusinessLogicException(ExceptionCode.MEMBER_SLEEP);
+        else if(findMember.getMemberStatus() == Member.MemberStatus.MEMBER_QUIT) throw new BusinessLogicException(ExceptionCode.MEMBER_QUIT);
     }
 
     private final class MemberDetails extends Member implements UserDetails{
         public MemberDetails(Member member) {
             setMemberId(member.getMemberId());
             setEmail(member.getEmail());
+            setName(member.getName());
             setPassword(member.getPassword());
             setRoles(member.getRoles());
         }

@@ -1,7 +1,8 @@
-package com.codestates.auth.jwt;
+package com.boardProject.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Component
 public class JwtTokenizer {
     @Getter
-    @Value("${jwt.key}")
+    @Value("${jwt.key.secret}")
     private String secretKey; // (2)
 
     @Getter
@@ -39,26 +40,26 @@ public class JwtTokenizer {
                                       String subject,
                                       Date expiration,
                                       String base64EncodedSecretKey){
-        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(Calendar.getInstance().getTime())
-                .setExpiration(expiration)
-                .signWith(key)
-                .compact();
+
+        return jwtBuilder(subject, expiration, base64EncodedSecretKey).setClaims(claims).compact();
     }
 
     public String generateRefreshToken(String subject,
                                        Date expiration,
                                        String base64EncodedSecretKey){
+
+        return jwtBuilder(subject, expiration, base64EncodedSecretKey).compact();
+    }
+    public JwtBuilder jwtBuilder(String subject,
+                                 Date expiration,
+                                 String base64EncodedSecretKey){
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
+
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(Calendar.getInstance().getTime())
                 .setExpiration(expiration)
-                .signWith(key)
-                .compact();
+                .signWith(key);
     }
 
     public Jws<Claims> getClaims(String jws, String base64EncodedSecretKey){
@@ -80,7 +81,6 @@ public class JwtTokenizer {
                 .parseClaimsJws(jws);
     }
 
-    // (5)
     public Date getTokenExpiration(int expirationMinutes) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, expirationMinutes);
