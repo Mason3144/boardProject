@@ -25,6 +25,8 @@ public class Post extends Auditable {
     private int views;
     @Column(nullable = false)
     private PostStatus state;
+    @Enumerated(value = EnumType.STRING)
+    private PostStatus postStatus;
     @ManyToOne
     @JoinColumn(name="MEMBER_ID")
     private Member member;
@@ -51,10 +53,10 @@ public class Post extends Auditable {
         POST_DELETED("삭제된 포스트");
 
         @Getter
-        private String state;
+        private String status;
 
-        PostStatus(String state) {
-            this.state = state;
+        PostStatus(String status) {
+            this.status = status;
         }
     }
 }
