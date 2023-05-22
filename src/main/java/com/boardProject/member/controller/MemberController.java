@@ -56,6 +56,8 @@ public class MemberController {
     }
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId){
+
+
         Member foundMember = service.findMember(memberId);
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.memberToMemberResponse(foundMember)),HttpStatus.OK

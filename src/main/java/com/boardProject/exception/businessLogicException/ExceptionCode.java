@@ -7,6 +7,7 @@ public enum ExceptionCode {
     MEMBER_QUIT(400, "Member quit"),
     MEMBER_NOT_FOUND(404, "Member not found"),
     MEMBER_EXISTS(409, "Member exists"),
+    MEMBER_NOT_AUTHORIZED(403,"Member not authorized"),
     COFFEE_NOT_FOUND(404, "Coffee not found"),
     COFFEE_CODE_EXISTS(409, "Coffee Code exists"),
     ORDER_NOT_FOUND(404, "Order not found"),

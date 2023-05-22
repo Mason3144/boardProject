@@ -1,11 +1,14 @@
 package com.boardProject.member.service;
 
+
+import com.boardProject.auth.jwt.filter.JwtVerificationFilter;
 import com.boardProject.auth.utils.CustomAuthorityUtils;
 import com.boardProject.exception.businessLogicException.BusinessLogicException;
 import com.boardProject.exception.businessLogicException.ExceptionCode;
 import com.boardProject.member.entity.Member;
 import com.boardProject.member.repository.MemberRepository;
 import com.boardProject.utils.CustomBeanUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +51,8 @@ public class MemberService {
 
     public Member updateMember(Member member){
         // profile photo update needed
+        verifyIsMine(member.getMemberId());
+
         Member foundMember = findExistsMember(member.getMemberId());
 
         Member updateMember = customBeanUtils.copyNonNullProperties(member,foundMember);
@@ -56,14 +61,27 @@ public class MemberService {
     }
 
     public Member findMember(long memberId){
+        verifyIsMine(memberId);
+
         return findExistsMember(memberId);
     }
 
     public Member deleteMember(long memberId){
+        verifyIsMine(memberId);
+
         Member member = findExistsMember(memberId);
         member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
 
         return repository.save(member);
+    }
+
+    private void verifyIsMine(long memberId){
+        int authenticatedMemberId = ((JwtVerificationFilter.AuthenticatedPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal())
+                .getMemberId();
+        if(memberId != authenticatedMemberId) throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_AUTHORIZED);
     }
 
     private void existsEmailChecker(String email){

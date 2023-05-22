@@ -2,6 +2,8 @@ package com.boardProject.auth.jwt.filter;
 
 import com.boardProject.auth.jwt.JwtTokenizer;
 import com.boardProject.auth.utils.CustomAuthorityUtils;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,6 +51,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private Map<String, Object> verifyJws(HttpServletRequest request) {
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
+
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
@@ -56,13 +59,19 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
-        String username = (String) claims.get("username");
+        AuthenticatedPrincipal principal = new AuthenticatedPrincipal((Integer) claims.get("memberId"), (String) claims.get("username"));
 
         List<GrantedAuthority> authorities =
                 authorityUtils.createAuthorities((List<String>)claims.get("roles"));
         Authentication authentication =
-                new UsernamePasswordAuthenticationToken(username, null, authorities);
+                new UsernamePasswordAuthenticationToken(principal, null, authorities);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+    @Getter
+    @AllArgsConstructor
+    public class AuthenticatedPrincipal{
+        private Integer memberId;
+        private String email;
     }
 }
