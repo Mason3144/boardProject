@@ -42,8 +42,8 @@ public class MemberService {
         member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
 
         Optional<Member> optionalMember = repository.findByEmail(member.getEmail());
+        return optionalMember.orElseGet(() -> optionalMember.orElse(repository.save(member)));
 
-        return optionalMember.orElse(repository.save(member));
     }
 
     public Member updateMember(Member member){

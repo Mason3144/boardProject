@@ -30,8 +30,8 @@ public class Member extends Auditable {
     @Column
     private String picture=null;
 
-    @Enumerated
-    @Column(nullable = false, length = 20)
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
