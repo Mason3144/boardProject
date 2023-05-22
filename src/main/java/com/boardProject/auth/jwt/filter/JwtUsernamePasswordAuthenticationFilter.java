@@ -43,6 +43,7 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
         return authenticationManager.authenticate(authenticationToken);
     }
 
+    // accessToken에 필요한 정보 암호화
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -63,6 +64,7 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
         claims.put("username", member.getEmail());
         claims.put("roles", member.getRoles());
         claims.put("name", member.getName());
+        claims.put("memberId", member.getMemberId());
 
         String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());

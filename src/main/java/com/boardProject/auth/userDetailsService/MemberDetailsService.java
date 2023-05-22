@@ -38,6 +38,7 @@ public class MemberDetailsService implements UserDetailsService {
         else if(findMember.getMemberStatus() == Member.MemberStatus.MEMBER_QUIT) throw new BusinessLogicException(ExceptionCode.MEMBER_QUIT);
     }
 
+    // response body와 accessToken에 사용될 정보를 담음
     private final class MemberDetails extends Member implements UserDetails{
         public MemberDetails(Member member) {
             setMemberId(member.getMemberId());

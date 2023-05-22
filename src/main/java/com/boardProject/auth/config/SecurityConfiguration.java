@@ -2,10 +2,12 @@ package com.boardProject.auth.config;
 
 import com.boardProject.auth.handler.MemberAuthenticationFailureHandler;
 import com.boardProject.auth.handler.MemberAuthenticationSuccessHandler;
+import com.boardProject.auth.handler.OAuth2MemberSuccessHandler;
 import com.boardProject.auth.jwt.JwtTokenizer;
 import com.boardProject.auth.jwt.filter.JwtUsernamePasswordAuthenticationFilter;
 import com.boardProject.auth.jwt.filter.JwtVerificationFilter;
 import com.boardProject.auth.utils.CustomAuthorityUtils;
+import com.boardProject.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -58,7 +61,11 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/*/members/**").hasAnyRole("MEMBER", "ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/*/members/**").hasRole("MEMBER")
                         .anyRequest().permitAll()
+                )
+                .oauth2Login(oauth2-> oauth2
+                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer,authorityUtils))
                 );
+
 
         return http.build();
     }
@@ -76,7 +83,10 @@ public class SecurityConfiguration {
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
 
             builder.addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtUsernamePasswordAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtUsernamePasswordAuthenticationFilter.class)
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+
+
         }
     }
 
