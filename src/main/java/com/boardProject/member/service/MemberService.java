@@ -29,14 +29,21 @@ public class MemberService {
 
     public Member createMember(Member member){
         // email verification needed
-        // social login create member needed
         existsEmailChecker(member.getEmail());
 
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
-        member.setSocialLogin(false);
+
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
 
         return repository.save(member);
+    }
+
+    public Member oauth2CreateMember(Member member){
+        member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
+
+        Optional<Member> optionalMember = repository.findByEmail(member.getEmail());
+
+        return optionalMember.orElse(repository.save(member));
     }
 
     public Member updateMember(Member member){

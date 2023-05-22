@@ -1,8 +1,6 @@
 package com.boardProject.auth.config;
 
-import com.boardProject.auth.handler.MemberAuthenticationFailureHandler;
-import com.boardProject.auth.handler.MemberAuthenticationSuccessHandler;
-import com.boardProject.auth.handler.OAuth2MemberSuccessHandler;
+import com.boardProject.auth.handler.*;
 import com.boardProject.auth.jwt.JwtTokenizer;
 import com.boardProject.auth.jwt.filter.JwtUsernamePasswordAuthenticationFilter;
 import com.boardProject.auth.jwt.filter.JwtVerificationFilter;
@@ -31,26 +29,28 @@ import java.util.List;
 public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
+    private final MemberAuthenticationSuccessHandler memberAuthenticationSuccessHandler;
 
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils) {
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, MemberAuthenticationSuccessHandler memberAuthenticationSuccessHandler) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
+        this.memberAuthenticationSuccessHandler = memberAuthenticationSuccessHandler;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .headers().frameOptions().sameOrigin() // (1)
+                .headers().frameOptions().sameOrigin()
                 .and()
-                .csrf().disable() // (2)
-                .cors(Customizer.withDefaults()) // (3)
+                .csrf().disable()
+                .cors(Customizer.withDefaults())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin().disable() // (4)
-                .httpBasic().disable() // (5)
+                .formLogin().disable()
+                .httpBasic().disable()
                 .exceptionHandling()
-//                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())  // (1) 추가
-//                .accessDeniedHandler(new MemberAccessDeniedHandler())            // (2) 추가
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                .accessDeniedHandler(new MemberAccessDeniedHandler())
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
@@ -63,22 +63,22 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2-> oauth2
-                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer,authorityUtils))
+                        .successHandler(memberAuthenticationSuccessHandler)
                 );
 
 
         return http.build();
     }
 
-    public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {  // (2-1)
+    public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtUsernamePasswordAuthenticationFilter jwtAuthenticationFilter = new JwtUsernamePasswordAuthenticationFilter(authenticationManager, jwtTokenizer);
             jwtAuthenticationFilter.setFilterProcessesUrl("/v1/auth/login");
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());  // (3) 추가
-            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());  // (4) 추가
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(memberAuthenticationSuccessHandler);
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
 
@@ -92,19 +92,19 @@ public class SecurityConfiguration {
 
 
     // (7)
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder(){
+//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//    }
     // (8)
     @Bean
     CorsConfigurationSource corsConfiguration(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("*")); // (8-1)
-        corsConfiguration.setAllowedMethods(List.of("GET","POST","PATCH","DELETE")); // (8-2)
+        corsConfiguration.setAllowedMethods(List.of("GET","POST","PATCH","DELETE"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); // (8-3)
-        source.registerCorsConfiguration("/**", corsConfiguration); // (8-4)
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
         return source;
     }

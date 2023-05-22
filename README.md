@@ -7,7 +7,7 @@
 - [ ] Sending email to manager when error got
 - [x] Spring Security 적용
 - [x] JWT를 이용한 인증 및 인가 처리
-- [ ] Google Social Login 기능 
+- [x] Google Social Login 기능 
 
 ## 회원 기능
 - [x] Entity 작성
