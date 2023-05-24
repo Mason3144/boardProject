@@ -51,6 +51,7 @@ public class MemberService {
 
     public Member updateMember(Member member){
         // profile photo update needed
+        // when updating password, need to use password encoder
         verifyIsMine(member.getMemberId());
 
         Member foundMember = findExistsMember(member.getMemberId());

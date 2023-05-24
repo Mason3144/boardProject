@@ -14,6 +14,10 @@
   (관리자 및 회원 상태 추가)
 - [x] DTO 작성
 - [x] 기본 CRUD
+  - [ ] password 업데이트시 PasswordEncoder사용
+  - [ ] Social Login user는 패스워드 업데이트 관련 로직 추가
+
+
  
 
 ### 부가 기능
