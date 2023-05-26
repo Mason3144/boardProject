@@ -51,6 +51,7 @@ public class PostsDto {
         private Posts.PostStatus postStatus;
         private LocalDateTime createdAt;
         private int commentsNumber;
+        private boolean isMine;
     }
 
     @Getter
@@ -61,8 +62,10 @@ public class PostsDto {
         private String title;
         private int views;
         private String writer;
+        private Posts.PostStatus postStatus;
         private LocalDateTime createdAt;
         private LikeDto.Response likes;
         private List<Comment> comments;
+        private boolean isMine;
     }
 }

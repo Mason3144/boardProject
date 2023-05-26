@@ -22,7 +22,6 @@ import java.net.URI;
 @RequestMapping("/v1/members")
 @Validated
 public class MemberController {
-    private final static String MEMBER_DEFAULT_URL = "/v1/members";
     private final MemberService service;
     private final MemberMapper mapper;
 
@@ -37,7 +36,7 @@ public class MemberController {
         // social login create member needed
         Member memberCreated = service.createMember(mapper.memberPostToMember(requestBody));
 
-        URI location = UriCreator.createUri(MEMBER_DEFAULT_URL,memberCreated.getMemberId());
+        URI location = UriCreator.createUri(UriCreator.DefaultUrl.MEMBER_DEFAULT_URL.getUrl(),memberCreated.getMemberId());
 
         return ResponseEntity.created(location).build();
     }

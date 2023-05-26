@@ -89,14 +89,6 @@ public class SecurityConfiguration {
 
         }
     }
-
-
-    // (7)
-//    @Bean
-//    public PasswordEncoder passwordEncoder(){
-//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//    }
-    // (8)
     @Bean
     CorsConfigurationSource corsConfiguration(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();

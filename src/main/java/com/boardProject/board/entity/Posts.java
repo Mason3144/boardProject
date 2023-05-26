@@ -46,6 +46,7 @@ public class Posts extends Auditable {
     public void setMember(Member member){
         this.member = member;
     }
+    public void setViews(){this.views++;}
 
 
     public enum PostStatus{

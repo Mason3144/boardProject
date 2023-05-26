@@ -8,6 +8,7 @@ import com.boardProject.exception.businessLogicException.ExceptionCode;
 import com.boardProject.member.entity.Member;
 import com.boardProject.member.repository.MemberRepository;
 import com.boardProject.utils.CustomBeanUtils;
+import com.boardProject.utils.LoggedInMember;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,7 @@ public class MemberService {
 
     public Member findMember(long memberId){
         verifyIsMine(memberId);
+        // 삭제된 멤버일 경우
 
         return findExistsMember(memberId);
     }
@@ -77,11 +79,8 @@ public class MemberService {
     }
 
     private void verifyIsMine(long memberId){
-        long authenticatedMemberId = ((JwtVerificationFilter.AuthenticatedPrincipal) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal())
-                .getMemberId();
+        // 포스트 에서도 사용할시 리펙터링
+        long authenticatedMemberId = LoggedInMember.findLoggedInMember().getMemberId();
         if(memberId != authenticatedMemberId) throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_AUTHORIZED);
     }
 
