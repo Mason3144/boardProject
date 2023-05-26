@@ -4,9 +4,8 @@ package com.boardProject.member.entity;
 
 import com.boardProject.audit.Auditable;
 import com.boardProject.board.entity.Likes;
-import com.boardProject.board.entity.Post;
+import com.boardProject.board.entity.Posts;
 import lombok.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.persistence.*;
 import java.util.*;
@@ -18,7 +17,7 @@ import java.util.*;
 public class Member extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long memberId;
+    private Long memberId;
     @Column(nullable = false,unique = true)
     private String email;
     @Column(nullable = false, length = 50)
@@ -35,8 +34,8 @@ public class Member extends Auditable {
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
-    private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Posts> posts = new ArrayList<>();
     @OneToMany(mappedBy = "member")
     private List<Likes> likes = new LinkedList<>();
     public void setLikes(Likes likes){
@@ -44,9 +43,9 @@ public class Member extends Auditable {
         if(likes.getMember()!=this) likes.setMember(this);
     }
 
-    public void setPosts(Post post){
-        posts.add(post);
-        if(post.getMember() != this) post.setMember(this);
+    public void setPosts(Posts posts){
+        this.posts.add(posts);
+        if(posts.getMember() != this) posts.setMember(this);
     }
 
     public enum MemberStatus{

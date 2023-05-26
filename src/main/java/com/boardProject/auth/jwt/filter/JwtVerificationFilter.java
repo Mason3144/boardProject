@@ -3,6 +3,7 @@ package com.boardProject.auth.jwt.filter;
 import com.boardProject.auth.jwt.JwtTokenizer;
 import com.boardProject.auth.utils.CustomAuthorityUtils;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
@@ -59,7 +62,12 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
-        AuthenticatedPrincipal principal = new AuthenticatedPrincipal((Integer) claims.get("memberId"), (String) claims.get("username"));
+        AuthenticatedPrincipal principal =
+                AuthenticatedPrincipal.builder()
+                        .email((String) claims.get("username"))
+                        .memberId((Integer) claims.get("memberId"))
+                        .name((String) claims.get("name"))
+                        .build();
 
         List<GrantedAuthority> authorities =
                 authorityUtils.createAuthorities((List<String>)claims.get("roles"));
@@ -69,9 +77,18 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
     @Getter
-    @AllArgsConstructor
-    public class AuthenticatedPrincipal{
+    @Builder
+    public static class AuthenticatedPrincipal{
         private Integer memberId;
         private String email;
+        private String name;
+        public Map<String,Object> getAuthenticatedPrincipal(){
+            Map<String,Object> map = new HashMap<>();
+            map.put("memberId", memberId);
+            map.put("email", email);
+            map.put("name", name);
+
+            return map;
+        }
     }
 }

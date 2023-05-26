@@ -19,10 +19,15 @@ public class Content extends Auditable {
     private String content;
     @OneToOne
     @JoinColumn(name="POST_ID")
-    private Post post;
-    public void setPost(Post post){
-        this.post = post;
-        if(post.getContent() != this) post.setContent(this);
+    private Posts posts;
+
+    public Content(String content) {
+        this.content = content;
+    }
+
+    public void setPosts(Posts posts){
+        this.posts = posts;
+        if(posts.getContent() != this) posts.setContent(this);
     }
 
 }

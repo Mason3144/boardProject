@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.UnexpectedTypeException;
+import java.util.Arrays;
 
 @Slf4j
 @RestControllerAdvice
@@ -28,11 +30,23 @@ public class GlobalExceptionAdvice {
         return response;
     }
 
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleConstraintViolationException(
+//            ConstraintViolationException e) {
+//        final ErrorResponse response = ErrorResponse.of(e.getConstraintViolations());
+//
+//        return response;
+//    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleConstraintViolationException(
-            ConstraintViolationException e) {
-        final ErrorResponse response = ErrorResponse.of(e.getConstraintViolations());
+    public ErrorResponse handleUnexpectedTypeException(
+            UnexpectedTypeException e) {
+        System.out.println(e);
+
+        final ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST,
+                "Required request body is missing");
 
         return response;
     }

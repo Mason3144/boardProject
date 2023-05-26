@@ -18,13 +18,13 @@ public class Likes extends Auditable {
     private long likesId;
     @ManyToOne
     @JoinColumn(name = "POST_ID")
-    private Post post;
+    private Posts posts;
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    public void setPost(Post post){
-        this.post = post;
+    public void setPosts(Posts posts){
+        this.posts = posts;
     }
     public void setMember(Member member){
         this.member = member;

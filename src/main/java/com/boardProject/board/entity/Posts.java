@@ -2,12 +2,11 @@ package com.boardProject.board.entity;
 
 import com.boardProject.audit.Auditable;
 import com.boardProject.member.entity.Member;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +14,9 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Post extends Auditable {
+@AllArgsConstructor
+@Builder
+public class Posts extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long postId;
@@ -23,40 +24,45 @@ public class Post extends Auditable {
     private String title;
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int views;
-    @Column(nullable = false)
-    private PostStatus state;
     @Enumerated(value = EnumType.STRING)
     private PostStatus postStatus;
     @ManyToOne
     @JoinColumn(name="MEMBER_ID")
     private Member member;
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "posts")
     private List<Likes> likes = new LinkedList<>();
-    @OneToOne(mappedBy = "post")
+    @OneToOne(mappedBy = "posts",cascade = CascadeType.ALL)
     private Content content;
 
     public void setContent(Content content){
         this.content = content;
-        if(content.getPost() != this) content.setPost(this);
+        if(content.getPosts() != this) content.setPosts(this);
     }
     public void setLikes(Likes likes){
         this.likes.add(likes);
-        if(likes.getPost()!=this) likes.setPost(this);
+        if(likes.getPosts()!=this) likes.setPosts(this);
     }
     // 상태 추가
     public void setMember(Member member){
         this.member = member;
     }
-    public enum PostStatus{
-        POST_PUBLIC("공개 포스트"),
-        POST_PRIVATE("비밀 포스트"),
-        POST_DELETED("삭제된 포스트");
 
-        @Getter
+
+    public enum PostStatus{
+        POST_PUBLIC("public post"),
+        POST_PRIVATE("private post"),
+        POST_DELETED("deleted post");
+
         private String status;
 
         PostStatus(String status) {
             this.status = status;
         }
+
+        @JsonValue
+        public String getStatus() {
+            return status;
+        }
+
     }
 }

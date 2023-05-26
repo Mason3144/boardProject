@@ -77,7 +77,7 @@ public class MemberService {
     }
 
     private void verifyIsMine(long memberId){
-        int authenticatedMemberId = ((JwtVerificationFilter.AuthenticatedPrincipal) SecurityContextHolder
+        long authenticatedMemberId = ((JwtVerificationFilter.AuthenticatedPrincipal) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal())
@@ -90,7 +90,7 @@ public class MemberService {
         if(member.isPresent()) throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 
-    private Member findExistsMember(long memberId){
+    public Member findExistsMember(long memberId){
         Optional<Member> optionalMember = repository.findById(memberId);
         return optionalMember.orElseThrow(()->new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
