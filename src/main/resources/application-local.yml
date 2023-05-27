@@ -37,8 +37,7 @@ server:
       force-response: true
 jwt:
   key:
-#    secret: ${JWT_SECRET_KEY}
-    secret: qlkmwdknqwkjndqjwndjwqmkdmnkqmwdqwdqwqnwdjnqqwdd
+    secret: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 420
 mail:

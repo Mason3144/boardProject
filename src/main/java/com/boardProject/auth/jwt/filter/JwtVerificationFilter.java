@@ -5,6 +5,7 @@ import com.boardProject.auth.utils.CustomAuthorityUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -67,6 +68,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
                         .email((String) claims.get("username"))
                         .memberId((Integer) claims.get("memberId"))
                         .name((String) claims.get("name"))
+                        .isLoggedIn(true)
                         .build();
 
         List<GrantedAuthority> authorities =
@@ -82,12 +84,13 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         private Integer memberId;
         private String email;
         private String name;
+        private boolean isLoggedIn;
         public Map<String,Object> getAuthenticatedPrincipal(){
             Map<String,Object> map = new HashMap<>();
             map.put("memberId", memberId);
             map.put("email", email);
             map.put("name", name);
-
+            map.put("loggedIn", isLoggedIn);
             return map;
         }
     }

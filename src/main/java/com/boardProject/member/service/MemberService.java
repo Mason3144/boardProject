@@ -79,7 +79,7 @@ public class MemberService {
     }
 
     private void verifyIsMine(long memberId){
-        // 포스트 에서도 사용할시 리펙터링
+        // 포스트에서도 사용하므로 나중에 리펙터링
         long authenticatedMemberId = LoggedInMember.findLoggedInMember().getMemberId();
         if(memberId != authenticatedMemberId) throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_AUTHORIZED);
     }
