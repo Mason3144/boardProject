@@ -60,6 +60,13 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/*/members").hasRole("ADMIN")
                         .antMatchers(HttpMethod.GET, "/*/members/**").hasAnyRole("MEMBER", "ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/*/members/**").hasRole("MEMBER")
+
+                        .antMatchers(HttpMethod.POST, "/*/posts").hasAnyRole("MEMBER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/*/posts/**").hasAnyRole("MEMBER", "ADMIN")
+                        .antMatchers(HttpMethod.GET, "/*/posts").permitAll()
+                        .antMatchers(HttpMethod.GET, "/*/posts/**").permitAll()
+                        .antMatchers(HttpMethod.DELETE, "/*/posts/**").hasAnyRole("MEMBER", "ADMIN")
+
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2-> oauth2

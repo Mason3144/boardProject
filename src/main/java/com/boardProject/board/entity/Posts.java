@@ -31,13 +31,9 @@ public class Posts extends Auditable {
     private Member member;
     @OneToMany(mappedBy = "posts")
     private List<Likes> likes = new LinkedList<>();
-    @OneToOne(mappedBy = "posts",cascade = CascadeType.ALL)
-    private Content content;
+    @Column(columnDefinition = "TEXT") //  varchar 보다 사이즈가 큰 텍스트 정의
+    private String content;
 
-    public void setContent(Content content){
-        this.content = content;
-        if(content.getPosts() != this) content.setPosts(this);
-    }
     public void setLikes(Likes likes){
         this.likes.add(likes);
         if(likes.getPosts()!=this) likes.setPosts(this);

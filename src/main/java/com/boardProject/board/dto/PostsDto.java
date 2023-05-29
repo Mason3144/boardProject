@@ -1,7 +1,6 @@
 package com.boardProject.board.dto;
 
 import com.boardProject.board.entity.Comment;
-import com.boardProject.board.entity.Content;
 import com.boardProject.board.entity.Posts;
 import com.boardProject.member.dto.MemberDto;
 import com.boardProject.validator.notSpace.NotSpace;
@@ -9,9 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +22,7 @@ public class PostsDto {
         @NotNull
         private Posts.PostStatus postStatus;
         @NotBlank
-        private String text;
+        private String content;
 
     }
     @Getter
@@ -38,7 +35,7 @@ public class PostsDto {
         @NotNull
         private Posts.PostStatus postStatus;
         @NotSpace
-        private String text;
+        private String content;
     }
     @Getter
     @Builder

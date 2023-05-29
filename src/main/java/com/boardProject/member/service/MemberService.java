@@ -1,15 +1,13 @@
 package com.boardProject.member.service;
 
 
-import com.boardProject.auth.jwt.filter.JwtVerificationFilter;
 import com.boardProject.auth.utils.CustomAuthorityUtils;
 import com.boardProject.exception.businessLogicException.BusinessLogicException;
 import com.boardProject.exception.businessLogicException.ExceptionCode;
 import com.boardProject.member.entity.Member;
 import com.boardProject.member.repository.MemberRepository;
 import com.boardProject.utils.CustomBeanUtils;
-import com.boardProject.utils.LoggedInMember;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.boardProject.utils.LoggedInMemberUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +35,7 @@ public class MemberService {
 
         member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
 
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        encodePassword(member);
 
         return repository.save(member);
     }
@@ -52,8 +50,8 @@ public class MemberService {
 
     public Member updateMember(Member member){
         // profile photo update needed
-        // when updating password, need to use password encoder
-        verifyIsMine(member.getMemberId());
+        LoggedInMemberUtils.verifyIsMineException(member.getMemberId());
+        encodePassword(member);
 
         Member foundMember = findExistsMember(member.getMemberId());
 
@@ -63,14 +61,12 @@ public class MemberService {
     }
 
     public Member findMember(long memberId){
-        verifyIsMine(memberId);
-        // 삭제된 멤버일 경우
-
+        LoggedInMemberUtils.verifyIsMineException(memberId);
         return findExistsMember(memberId);
     }
 
     public Member deleteMember(long memberId){
-        verifyIsMine(memberId);
+        LoggedInMemberUtils.verifyIsMineException(memberId);
 
         Member member = findExistsMember(memberId);
         member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
@@ -78,19 +74,20 @@ public class MemberService {
         return repository.save(member);
     }
 
-    private void verifyIsMine(long memberId){
-        // 포스트에서도 사용하므로 나중에 리펙터링
-        long authenticatedMemberId = LoggedInMember.findLoggedInMember().getMemberId();
-        if(memberId != authenticatedMemberId) throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_AUTHORIZED);
-    }
-
     private void existsEmailChecker(String email){
         Optional<Member> member = repository.findByEmail(email);
         if(member.isPresent()) throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 
-    public Member findExistsMember(long memberId){
+    private Member findExistsMember(long memberId){
+        // 삭제된 멤버 제외시키기, JPQL
+
         Optional<Member> optionalMember = repository.findById(memberId);
         return optionalMember.orElseThrow(()->new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+    }
+
+    private void encodePassword(Member member){
+        if(member.getPassword() != null)
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
     }
 }

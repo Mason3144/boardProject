@@ -1,15 +1,11 @@
 package com.boardProject.board.controller;
 
 import com.boardProject.board.dto.PostsDto;
-import com.boardProject.board.entity.Content;
 import com.boardProject.board.entity.Posts;
 import com.boardProject.board.mapper.PostsMapper;
 import com.boardProject.board.service.PostsService;
 import com.boardProject.dto.MultiResponseDto;
 import com.boardProject.dto.SingleResponseDto;
-import com.boardProject.member.dto.MemberDto;
-import com.boardProject.member.entity.Member;
-import com.boardProject.utils.LoggedInMember;
 import com.boardProject.utils.UriCreator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
