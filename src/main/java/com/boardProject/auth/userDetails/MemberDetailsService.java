@@ -29,13 +29,15 @@ public class MemberDetailsService implements UserDetailsService {
         Optional<Member> optionalMember = repository.findByEmail(username);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        checkMemberStatus(findMember);
+        checkUserAble(findMember);
+
 
         return new MemberDetails(findMember);
     }
-    private void checkMemberStatus(Member findMember){
+    private void checkUserAble(Member findMember){
         if(findMember.getMemberStatus() == Member.MemberStatus.MEMBER_SLEEP) throw new BusinessLogicException(ExceptionCode.MEMBER_SLEEP);
         else if(findMember.getMemberStatus() == Member.MemberStatus.MEMBER_QUIT) throw new BusinessLogicException(ExceptionCode.MEMBER_QUIT);
+        else if(findMember.isSocialLogin() && findMember.getPassword()==null) throw new BusinessLogicException(ExceptionCode.MEMBER_IS_OAUTH2USER);
     }
 
     // response body와 accessToken에 사용될 정보를 담음

@@ -15,7 +15,7 @@ public class LoggedInMemberUtils {
     }
 
     public static void verifyIsMineException(long memberId){
-        if(verifyIsMineBoolean(memberId))
+        if(!verifyIsMineBoolean(memberId))
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_AUTHORIZED);
     }
 }

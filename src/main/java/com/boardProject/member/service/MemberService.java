@@ -80,8 +80,6 @@ public class MemberService {
     }
 
     private Member findExistsMember(long memberId){
-        // 삭제된 멤버 제외시키기, JPQL
-
         Optional<Member> optionalMember = repository.findById(memberId);
         return optionalMember.orElseThrow(()->new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }

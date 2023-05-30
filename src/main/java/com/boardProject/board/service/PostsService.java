@@ -69,7 +69,6 @@ public class PostsService {
     }
 
     public void deletePost(long postId){
-        // findExistsPost()의 findById()에서 postStatus 확인하여 delete 인경우 제외시키기, jpql
         Posts foundPost = findExistsPost(postId);
         LoggedInMemberUtils.verifyIsMineException(foundPost.getMember().getMemberId());
 
@@ -78,7 +77,6 @@ public class PostsService {
     }
 
     private Posts findExistsPost(long postId){
-        // postStatus 확인하여 delete 인경우 제외시키기, jpql
         Optional<Posts> optionalMember = repository.findById(postId);
         return optionalMember.orElseThrow(()->new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
     }
