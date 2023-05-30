@@ -58,6 +58,7 @@ public class MemberService {
 
     public Member updateMember(Member member){
         // profile photo update needed
+
         LoggedInMemberUtils.verifyIsMineException(member.getMemberId());
         encodePassword(member);
 
