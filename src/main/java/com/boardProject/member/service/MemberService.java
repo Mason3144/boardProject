@@ -33,6 +33,7 @@ public class MemberService {
         // email verification needed
         existsEmailChecker(member.getEmail());
 
+        member.setSocialLogin(false);
         member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
 
         encodePassword(member);
@@ -44,8 +45,15 @@ public class MemberService {
         member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
 
         Optional<Member> optionalMember = repository.findByEmail(member.getEmail());
-        return optionalMember.orElseGet(() -> optionalMember.orElse(repository.save(member)));
 
+        if(optionalMember.isPresent()){
+            Member existsMember = optionalMember.get();
+            existsMember.setSocialLogin(true);
+
+            return repository.save(existsMember);
+        }else return repository.save(member);
+
+//        return optionalMember.orElseGet(() -> optionalMember.orElse(repository.save(member)));
     }
 
     public Member updateMember(Member member){
