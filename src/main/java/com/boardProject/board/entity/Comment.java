@@ -1,6 +1,7 @@
 package com.boardProject.board.entity;
 
 import com.boardProject.audit.Auditable;
+import com.boardProject.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,9 +19,14 @@ public class Comment extends Auditable {
     private long commentId;
     @Enumerated(value = EnumType.STRING)
     private CommentStatus status;
-
-    // member
-    // post
+    @Column(columnDefinition = "TEXT") //  varchar 보다 사이즈가 큰 텍스트 정의
+    private String content;
+    @ManyToOne
+    @JoinColumn(name = "POST_ID")
+    private Posts posts;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     public enum CommentStatus{
         COMMENT_ACTIVE("Comment alive"),

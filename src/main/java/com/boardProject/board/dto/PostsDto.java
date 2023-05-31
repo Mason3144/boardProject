@@ -60,7 +60,7 @@ public class PostsDto {
         private String content;
         private Posts.PostStatus postStatus;
         private LocalDateTime createdAt;
-        private LikeDto.Response likes;
+        private LikeDto.ResponseOnPost likes;
         private List<Comment> comments;
         private boolean isMine;
     }

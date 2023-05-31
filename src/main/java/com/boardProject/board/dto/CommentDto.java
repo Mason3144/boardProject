@@ -11,11 +11,16 @@ public class CommentDto {
     @Builder
     @Setter
     public static class Post{
-        private long commentId;
-        @NotBlank
-        private long memberId;
-        @NotBlank
         private long postId;
+        @NotBlank
+        private String comment;
+    }
+
+    @Getter
+    @Builder
+    @Setter
+    public static class Patch{
+        private long commentId;
         @NotBlank
         private String comment;
     }

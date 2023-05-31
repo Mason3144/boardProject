@@ -35,9 +35,15 @@ public class Posts extends Auditable {
     private Member member;
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Likes> likes = new LinkedList<>();
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new LinkedList<>();
     @Column(columnDefinition = "TEXT") //  varchar 보다 사이즈가 큰 텍스트 정의
     private String content;
 
+    public void setComments(Comment comment){
+        this.comments.add(comment);
+        if(comment.getPosts()!=this) comment.setPosts(this);
+    }
     public void setLikes(Likes likes){
         this.likes.add(likes);
         if(likes.getPosts()!=this) likes.setPosts(this);
