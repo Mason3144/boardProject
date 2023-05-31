@@ -2,6 +2,7 @@ package com.boardProject.board.entity;
 
 import com.boardProject.audit.Auditable;
 import com.boardProject.member.entity.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,11 +23,4 @@ public class Likes extends Auditable {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-
-    public void setPosts(Posts posts){
-        this.posts = posts;
-    }
-    public void setMember(Member member){
-        this.member = member;
-    }
 }

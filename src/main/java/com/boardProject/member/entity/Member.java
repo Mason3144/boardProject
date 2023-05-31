@@ -40,7 +40,7 @@ public class Member extends Auditable {
     private List<String> roles = new ArrayList<>();
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Posts> posts = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Likes> likes = new LinkedList<>();
     public void setLikes(Likes likes){
         this.likes.add(likes);

@@ -39,6 +39,8 @@ public class PostsController {
 
         return ResponseEntity.created(location).build();
     }
+
+
     @PatchMapping("/{post-id}")
     public ResponseEntity patchPost(@PathVariable("post-id") @Positive long postId,
                                     @RequestBody @Valid PostsDto.Patch requestBody){

@@ -18,6 +18,21 @@ import java.util.Optional;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostsMapper {
     MemberDto.Response memberToMemberResponse(Member member);
+    default PostsDto.ResponseOnBoard postToResponseOnBoard(Posts posts){
+        Member postOwner = posts.getMember();
+
+        return PostsDto.ResponseOnBoard.builder()
+                .postId(posts.getPostId())
+                .title(posts.getTitle())
+                .views(posts.getViews())
+                .writer(memberToMemberResponse(postOwner))
+                .postStatus(posts.getPostStatus())
+                .createdAt(posts.getCreatedAt())
+                .commentsNumber(0) // comment 로직 추가 필요
+                .isMine(LoggedInMemberUtils.verifyIsMineBoolean(postOwner.getMemberId()))
+                .build();
+    }
+
     default PostsDto.ResponseOnPost postsToResponseOnPost(Posts posts){
         Member postOwner = posts.getMember();
 
@@ -36,25 +51,7 @@ public interface PostsMapper {
                 .postStatus(posts.getPostStatus())
                 .build();
     }
-
-    default PostsDto.ResponseOnBoard postToResponseOnBoard(Posts posts){
-        Member postOwner = posts.getMember();
-
-        return PostsDto.ResponseOnBoard.builder()
-                .postId(posts.getPostId())
-                .title(posts.getTitle())
-                .views(posts.getViews())
-                .writer(memberToMemberResponse(postOwner))
-                .postStatus(posts.getPostStatus())
-                .createdAt(posts.getCreatedAt())
-                .commentsNumber(0) // comment 로직 추가 필요
-                .isMine(LoggedInMemberUtils.verifyIsMineBoolean(postOwner.getMemberId()))
-                .build();
-
-
-    }
     default LikeDto.Response checkIsLiked(List<Likes> likesList){
-
         Optional<Likes> isLiked = likesList.stream().filter(like->
                         LoggedInMemberUtils.verifyIsMineBoolean(like.getMember().getMemberId())
         ).findFirst();
@@ -62,14 +59,9 @@ public interface PostsMapper {
         return LikeDto.Response.builder().totalLikes(likesList.size()).isLiked(isLiked.isPresent()).build();
     }
 
-    // 싹다 리펙터링
-    // postDtoToPosts 와 중복코드 많음
     Posts patchDtoToPosts(PostsDto.Patch requestBody);
 
     Posts postDtoToPosts(PostsDto.Post requestBody);
-
-
-
 
     List<PostsDto.ResponseOnBoard> postsToResponseOnBoards(List<Posts> posts);
 }

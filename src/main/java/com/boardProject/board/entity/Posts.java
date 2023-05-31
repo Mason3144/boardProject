@@ -17,6 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Posts extends Auditable {
+    public Posts(long postId) {
+        this.postId = postId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long postId;
@@ -29,7 +33,7 @@ public class Posts extends Auditable {
     @ManyToOne
     @JoinColumn(name="MEMBER_ID")
     private Member member;
-    @OneToMany(mappedBy = "posts")
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Likes> likes = new LinkedList<>();
     @Column(columnDefinition = "TEXT") //  varchar 보다 사이즈가 큰 텍스트 정의
     private String content;

@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class Comment extends Auditable {
+    // jpql count 사용해보기
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long commentId;

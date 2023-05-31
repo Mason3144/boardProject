@@ -54,6 +54,8 @@ public class PostsService {
 
         foundPost.setViews();
 
+        foundPost.getLikes();
+
         return repository.save(foundPost);
     }
     public Page<Posts> getPosts(int page, int size){
@@ -76,7 +78,7 @@ public class PostsService {
         repository.save(foundPost);
     }
 
-    private Posts findExistsPost(long postId){
+    public Posts findExistsPost(long postId){
         Optional<Posts> optionalMember = repository.findById(postId);
         return optionalMember.orElseThrow(()->new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
     }
