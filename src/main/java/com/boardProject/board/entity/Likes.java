@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class Likes extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long likesId;
+    private Long likesId;
     @ManyToOne
     @JoinColumn(name = "POST_ID")
     private Posts posts;

@@ -36,7 +36,7 @@ public interface PostsMapper {
     default PostsDto.ResponseOnPost postsToResponseOnPost(Posts posts){
         Member postOwner = posts.getMember();
 
-        LikeDto.Response likeResponse = checkIsLiked(posts.getLikes());
+        LikeDto.ResponseOnPost likeResponse = checkIsLiked(posts.getLikes());
 
         return PostsDto.ResponseOnPost.builder()
                 .postId(posts.getPostId())
@@ -51,12 +51,12 @@ public interface PostsMapper {
                 .postStatus(posts.getPostStatus())
                 .build();
     }
-    default LikeDto.Response checkIsLiked(List<Likes> likesList){
+    default LikeDto.ResponseOnPost checkIsLiked(List<Likes> likesList){
         Optional<Likes> isLiked = likesList.stream().filter(like->
                         LoggedInMemberUtils.verifyIsMineBoolean(like.getMember().getMemberId())
         ).findFirst();
 
-        return LikeDto.Response.builder().totalLikes(likesList.size()).isLiked(isLiked.isPresent()).build();
+        return LikeDto.ResponseOnPost.builder().totalLikes(likesList.size()).isLiked(isLiked.isPresent()).build();
     }
 
     Posts patchDtoToPosts(PostsDto.Patch requestBody);

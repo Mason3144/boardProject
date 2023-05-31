@@ -1,7 +1,14 @@
 package com.boardProject.board.controller;
 
+import com.boardProject.board.dto.LikeDto;
+import com.boardProject.board.dto.PostsDto;
+import com.boardProject.board.entity.Likes;
+import com.boardProject.board.entity.Posts;
+import com.boardProject.board.mapper.LikeMapper;
 import com.boardProject.board.service.LikeService;
+import com.boardProject.dto.SingleResponseDto;
 import com.boardProject.utils.UriCreator;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +21,19 @@ import java.net.URI;
 @Validated
 public class LikeController {
     private final LikeService likeService;
+    private final LikeMapper likeMapper;
 
-    public LikeController(LikeService likeService) {
+    public LikeController(LikeService likeService, LikeMapper likeMapper) {
         this.likeService = likeService;
+        this.likeMapper = likeMapper;
     }
 
     @PostMapping("/toggle")
-    public ResponseEntity postLike(@RequestParam("postid") long postId){
-        likeService.toggleLike(postId);
+    public ResponseEntity postLike(@RequestParam("postid") @Positive long postId){
+        Likes like = likeService.toggleLike(postId);
 
-        URI location = UriCreator.createUri(UriCreator.DefaultUrl.POST_DEFAULT_URL.getUrl(),postId);
+        LikeDto.ResponseOnToggle response = likeMapper.likesToLikeDto(like);
 
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 }
