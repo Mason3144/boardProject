@@ -11,10 +11,12 @@ import com.boardProject.utils.CustomBeanUtils;
 import com.boardProject.utils.LoggedInMemberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -66,8 +68,12 @@ public class PostsService {
                 Sort.by("postId").descending()));
     }
 
-    public Posts searchPosts(){
-        return null;
+    public Page<Posts> searchPosts(int page, int size, String keyword){
+
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by("postId").descending());
+
+        return repository.findByTitleContainingIgnoreCase(keyword, pageable);
     }
 
     public void deletePost(long postId){

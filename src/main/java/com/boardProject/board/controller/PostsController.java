@@ -76,10 +76,20 @@ public class PostsController {
                 HttpStatus.OK);
     }
 
-//    @GetMapping
-//    public ResponseEntity searchPosts(){
-//        return null;
-//    }
+    @GetMapping("/search/title")
+    public ResponseEntity searchPosts(@Positive @RequestParam int page,
+                                      @Positive @RequestParam int size,
+                                      @RequestParam String keyword){
+
+        Page<Posts> pagePosts = postsService.searchPosts(page-1,size,keyword);
+
+        List<Posts> posts = pagePosts.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(postsMapper.postsToResponseOnBoards(posts),
+                        pagePosts),
+                HttpStatus.OK);
+    }
 
     @DeleteMapping("/{post-id}")
     public ResponseEntity deletePost(@PathVariable("post-id") @Positive long postId){
