@@ -13,7 +13,7 @@ public class CommentDto {
     public static class Post{
         private long postId;
         @NotBlank
-        private String comment;
+        private String content;
     }
 
     @Getter
@@ -22,7 +22,7 @@ public class CommentDto {
     public static class Patch{
         private long commentId;
         @NotBlank
-        private String comment;
+        private String content;
     }
 
     @Getter

@@ -6,7 +6,9 @@ import com.boardProject.board.entity.Comment;
 import com.boardProject.board.mapper.CommentsMapper;
 import com.boardProject.board.service.CommentService;
 import com.boardProject.board.service.LikeService;
+import com.boardProject.dto.SingleResponseDto;
 import com.boardProject.utils.UriCreator;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +35,16 @@ public class CommentController {
         requestBody.setPostId(postId);
         Comment comment = commentService.createComment(commentsMapper.commentPostDtoToComment(requestBody));
 
-        return null;
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(commentsMapper.commentToCommentResponseDto(comment)), HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/{comment-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId){
         commentService.removeComment(commentId);
 
-        return null;
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
@@ -52,7 +56,8 @@ public class CommentController {
 
         Comment comment = commentService.updateComment(commentsMapper.commentPatchDtoToComment(requestBody));
 
-
-        return null;
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(commentsMapper.commentToCommentResponseDto(comment)), HttpStatus.OK
+        );
     }
 }

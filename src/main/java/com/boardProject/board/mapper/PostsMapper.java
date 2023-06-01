@@ -1,8 +1,10 @@
 package com.boardProject.board.mapper;
 
 import com.boardProject.auth.jwt.filter.JwtVerificationFilter;
+import com.boardProject.board.dto.CommentDto;
 import com.boardProject.board.dto.LikeDto;
 import com.boardProject.board.dto.PostsDto;
+import com.boardProject.board.entity.Comment;
 import com.boardProject.board.entity.Likes;
 import com.boardProject.board.entity.Posts;
 import com.boardProject.member.dto.MemberDto;
@@ -14,6 +16,7 @@ import org.mapstruct.ReportingPolicy;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostsMapper {
@@ -28,7 +31,7 @@ public interface PostsMapper {
                 .writer(memberToMemberResponse(postOwner))
                 .postStatus(posts.getPostStatus())
                 .createdAt(posts.getCreatedAt())
-                .commentsNumber(0) // comment 로직 추가 필요
+                .commentsNumber(posts.getComments().size()) // comment 로직 추가 필요
                 .isMine(LoggedInMemberUtils.verifyIsMineBoolean(postOwner.getMemberId()))
                 .build();
     }
@@ -38,6 +41,8 @@ public interface PostsMapper {
 
         LikeDto.ResponseOnPost likeResponse = checkIsLiked(posts.getLikes());
 
+        List<CommentDto.Response> commentList = posts.getComments().stream().map(this::commentToCommentResponseDto).collect(Collectors.toList());
+
         return PostsDto.ResponseOnPost.builder()
                 .postId(posts.getPostId())
                 .title(posts.getTitle())
@@ -46,9 +51,17 @@ public interface PostsMapper {
                 .createdAt(posts.getCreatedAt())
                 .likes(likeResponse)
                 .content(posts.getContent())
-                .comments(new LinkedList<>()) //  comment 로직 추가 필요
+                .comments(commentList)
                 .isMine(LoggedInMemberUtils.verifyIsMineBoolean(postOwner.getMemberId()))
                 .postStatus(posts.getPostStatus())
+                .build();
+    }
+    default CommentDto.Response commentToCommentResponseDto(Comment comment){
+        return CommentDto.Response.builder()
+                .commentId(comment.getCommentId())
+                .comment(comment.getContent())
+                .postId(comment.getPosts().getPostId())
+                .memberId(comment.getMember().getMemberId())
                 .build();
     }
     default LikeDto.ResponseOnPost checkIsLiked(List<Likes> likesList){

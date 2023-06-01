@@ -37,14 +37,22 @@ public class CommentService {
     public void removeComment(long commentId){
         Comment foundComment = findExistsComment(commentId);
         LoggedInMemberUtils.verifyIsMineException(foundComment.getMember().getMemberId());
-        commentRepository.delete(foundComment);
+
+        foundComment.setCommentStatus(Comment.CommentStatus.COMMENT_DELETED);
+
+        commentRepository.save(foundComment);
     }
 
     public Comment updateComment(Comment comment){
         Comment foundComment = findExistsComment(comment.getCommentId());
         LoggedInMemberUtils.verifyIsMineException(foundComment.getMember().getMemberId());
 
+        System.out.println(comment.getContent());
+        System.out.println(foundComment.getContent());
+
         Comment newComment = customBeanUtils.copyNonNullProperties(comment,foundComment);
+
+        System.out.println(newComment.getContent());
 
         return commentRepository.save(newComment);
     }

@@ -22,7 +22,7 @@ public interface CommentsMapper {
         int loggedInMemberId = LoggedInMemberUtils.findLoggedInMember().getMemberId();
 
         Comment comment = new Comment();
-        comment.setContent(postDto.getComment());
+        comment.setContent(postDto.getContent());
 
         Member member = new Member(loggedInMemberId);
         member.setComments(comment);
@@ -33,6 +33,8 @@ public interface CommentsMapper {
         return comment;
     };
     Comment commentPatchDtoToComment(CommentDto.Patch patchDto);
+
+
     default CommentDto.Response commentToCommentResponseDto(Comment comment){
         return CommentDto.Response.builder()
                 .commentId(comment.getCommentId())
