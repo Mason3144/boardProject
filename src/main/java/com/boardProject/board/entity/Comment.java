@@ -18,7 +18,7 @@ public class Comment extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long commentId;
     @Enumerated(value = EnumType.STRING)
-    private CommentStatus status;
+    private CommentStatus commentStatus = CommentStatus.COMMENT_ALIVE;
     @Column(columnDefinition = "TEXT") //  varchar 보다 사이즈가 큰 텍스트 정의
     private String content;
     @ManyToOne
@@ -29,7 +29,7 @@ public class Comment extends Auditable {
     private Member member;
 
     public enum CommentStatus{
-        COMMENT_ACTIVE("Comment alive"),
+        COMMENT_ALIVE("Comment alive"),
         COMMENT_DELETED("Comment deleted");
         @Getter
         private String status;

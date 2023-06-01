@@ -3,6 +3,7 @@
 package com.boardProject.member.entity;
 
 import com.boardProject.audit.Auditable;
+import com.boardProject.board.entity.Comment;
 import com.boardProject.board.entity.Likes;
 import com.boardProject.board.entity.Posts;
 import lombok.*;
@@ -42,6 +43,14 @@ public class Member extends Auditable {
     private List<Posts> posts = new ArrayList<>();
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Likes> likes = new LinkedList<>();
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new LinkedList<>();
+
+    public void setComments(Comment comment){
+        this.comments.add(comment);
+        if(comment.getMember()!=this) comment.setMember(this);
+    }
+
     public void setLikes(Likes likes){
         this.likes.add(likes);
         if(likes.getMember()!=this) likes.setMember(this);

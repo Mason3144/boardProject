@@ -24,4 +24,14 @@ public class CommentDto {
         @NotBlank
         private String comment;
     }
+
+    @Getter
+    @Builder
+    @Setter
+    public static class Response{
+        private long commentId;
+        private long memberId;
+        private long postId;
+        private String comment;
+    }
 }

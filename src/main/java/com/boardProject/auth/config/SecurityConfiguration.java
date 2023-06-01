@@ -70,6 +70,10 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/*/like/**").hasAnyRole("MEMBER", "ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/*/like/**").hasAnyRole("MEMBER", "ADMIN")
 
+                        .antMatchers(HttpMethod.POST, "/*/comment").hasAnyRole("MEMBER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/*/comment/**").hasAnyRole("MEMBER", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/*/comment/**").hasAnyRole("MEMBER", "ADMIN")
+
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2-> oauth2

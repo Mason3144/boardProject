@@ -79,8 +79,8 @@ public class PostsService {
     }
 
     public Posts findExistsPost(long postId){
-        Optional<Posts> optionalMember = repository.findById(postId);
-        return optionalMember.orElseThrow(()->new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
+        Optional<Posts> optionalPost = repository.findById(postId);
+        return optionalPost.orElseThrow(()->new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
     }
     private void checkPrivatePost(Posts foundPost){
         if(foundPost.getPostStatus().equals(Posts.PostStatus.POST_PRIVATE))

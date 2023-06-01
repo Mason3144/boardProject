@@ -18,6 +18,27 @@ import java.util.Optional;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CommentsMapper {
-    Comment commentPostDtoToComment(CommentDto.Post postDto);
+    default Comment commentPostDtoToComment(CommentDto.Post postDto){
+        int loggedInMemberId = LoggedInMemberUtils.findLoggedInMember().getMemberId();
+
+        Comment comment = new Comment();
+        comment.setContent(postDto.getComment());
+
+        Member member = new Member(loggedInMemberId);
+        member.setComments(comment);
+
+        Posts post = new Posts(postDto.getPostId());
+        post.setComments(comment);
+
+        return comment;
+    };
     Comment commentPatchDtoToComment(CommentDto.Patch patchDto);
+    default CommentDto.Response commentToCommentResponseDto(Comment comment){
+        return CommentDto.Response.builder()
+                .commentId(comment.getCommentId())
+                .comment(comment.getContent())
+                .postId(comment.getPosts().getPostId())
+                .memberId(comment.getMember().getMemberId())
+                .build();
+    }
 }
