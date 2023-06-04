@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 20MB
   h2:
     console:
       enabled: true
@@ -43,3 +47,7 @@ jwt:
 mail:
   address:
     admin: admin@admin.com
+cloud:
+  s3:
+    access-id: ${S3_BOARD_PROJECT_ACCESS_KEY}
+    secret-key: ${S3_BOARD_PROJECT_SECRET_KEY}

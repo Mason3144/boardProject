@@ -9,9 +9,11 @@ import com.boardProject.dto.SingleResponseDto;
 import com.boardProject.utils.UriCreator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -31,9 +33,10 @@ public class PostsController {
         this.postsMapper = postsMapper;
     }
 
-    @PostMapping
-    public ResponseEntity postPosts(@RequestBody @Valid PostsDto.Post requestBody){
-        Posts createdPost = postsService.createPost(postsMapper.postDtoToPosts(requestBody));
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity postPosts(@RequestPart @Valid PostsDto.Post requestBody,
+                                    @RequestPart(required = false) List<MultipartFile> photoImgs){
+        Posts createdPost = postsService.createPost(postsMapper.postDtoToPosts(requestBody), photoImgs);
 
         URI location = UriCreator.createUri(UriCreator.DefaultUrl.POST_DEFAULT_URL.getUrl(),createdPost.getPostId());
 

@@ -14,8 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Posts extends Auditable {
     public Posts(long postId) {
         this.postId = postId;
@@ -37,9 +35,15 @@ public class Posts extends Auditable {
     private List<Likes> likes = new LinkedList<>();
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new LinkedList<>();
+    @OneToMany(mappedBy = "posts", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<Photos> photos = new LinkedList<>();
     @Column(columnDefinition = "TEXT") //  varchar 보다 사이즈가 큰 텍스트 정의
     private String content;
 
+    public void setPhotos(Photos photo){
+        this.photos.add(photo);
+        if(photo.getPosts()!=this) photo.setPosts(this);
+    }
     public void setComments(Comment comment){
         this.comments.add(comment);
         if(comment.getPosts()!=this) comment.setPosts(this);

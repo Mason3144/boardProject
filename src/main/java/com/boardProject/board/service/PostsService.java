@@ -1,9 +1,10 @@
 package com.boardProject.board.service;
 
-import com.boardProject.auth.jwt.filter.JwtVerificationFilter;
+import com.boardProject.board.entity.Photos;
 import com.boardProject.board.entity.Posts;
 
 import com.boardProject.board.repository.PostsRepository;
+import com.boardProject.board.storageService.StorageService;
 import com.boardProject.exception.businessLogicException.BusinessLogicException;
 import com.boardProject.exception.businessLogicException.ExceptionCode;
 import com.boardProject.member.entity.Member;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,15 +27,23 @@ import java.util.Optional;
 public class PostsService {
     private final PostsRepository repository;
     private final CustomBeanUtils<Posts> customBeanUtils;
+    private final StorageService storageService;
 
-    public PostsService(PostsRepository repository, CustomBeanUtils<Posts> customBeanUtils) {
+    public PostsService(PostsRepository repository, CustomBeanUtils<Posts> customBeanUtils, StorageService storageService) {
         this.repository = repository;
         this.customBeanUtils = customBeanUtils;
+        this.storageService = storageService;
     }
 
-    public Posts createPost(Posts posts) {
-        // img file upload
+    public Posts createPost(Posts posts, List<MultipartFile> postImg) {
         posts.setMember(new Member(LoggedInMemberUtils.findLoggedInMember().getMemberId()));
+
+        postImg.forEach(i->{
+            String filePath = storageService.store(i);
+            Photos photo = new Photos(filePath);
+            posts.setPhotos(photo);
+        });
+
         return repository.save(posts);
     }
 
