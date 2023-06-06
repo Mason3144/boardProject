@@ -1,6 +1,5 @@
 # 게시판 프로젝트
 ## 남은 기능들
-- [ ] 이메일 인증
 - [ ] n+1 문제
 - [ ] 테스트코드
 
@@ -25,7 +24,11 @@
   - [x] Social Login User는 패스워드 업데이트 관련 로직 추가
 
 ### 부가 기능
-- [ ] 이메일 verification
+- [x] 회원가입 이메일 verification
+  - [x] JavaMailSender를 활용하여 회원가입시 사용자에게 인증 링크 이메일로 발송  
+  - [x] Thymeleaf를 이용한 이메일 템플릿 활용
+  - [x] 이메일 인증 후 스프링 시큐리티의 AuthenticationSuccessHandler를 이용하여 바로 로그인 실행
+  - [x] 이메일 인증 사용자에게만 권한 부여
 - [x] social login
 
 ## 게시판 기능

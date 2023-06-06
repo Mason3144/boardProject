@@ -2,12 +2,16 @@ package com.boardProject.member.service;
 
 
 import com.boardProject.auth.utils.CustomAuthorityUtils;
+import com.boardProject.emailVerification.entity.EmailVerification;
+import com.boardProject.event.MemberRegistrationApplicationEvent;
 import com.boardProject.exception.businessLogicException.BusinessLogicException;
 import com.boardProject.exception.businessLogicException.ExceptionCode;
 import com.boardProject.member.entity.Member;
 import com.boardProject.member.repository.MemberRepository;
 import com.boardProject.utils.CustomBeanUtils;
 import com.boardProject.utils.LoggedInMemberUtils;
+import com.boardProject.utils.RandomKeyGen;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,24 +25,32 @@ public class MemberService {
     private final CustomBeanUtils<Member> customBeanUtils;
     private final CustomAuthorityUtils customAuthorityUtils;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher publisher;
 
-    public MemberService(MemberRepository repository, CustomBeanUtils<Member> customBeanUtils, CustomAuthorityUtils customAuthorityUtils, PasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository repository, CustomBeanUtils<Member> customBeanUtils, CustomAuthorityUtils customAuthorityUtils, PasswordEncoder passwordEncoder, ApplicationEventPublisher publisher) {
         this.repository = repository;
         this.customBeanUtils = customBeanUtils;
         this.customAuthorityUtils = customAuthorityUtils;
         this.passwordEncoder = passwordEncoder;
+        this.publisher = publisher;
+    }
+    private EmailVerification createEmailVerification(){
+        return new EmailVerification(RandomKeyGen.generateVerificationCode());
     }
 
     public Member createMember(Member member){
-        // email verification needed
         existsEmailChecker(member.getEmail());
 
         member.setSocialLogin(false);
-        member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
+        member.setEmailVerification(createEmailVerification());
 
         encodePassword(member);
 
-        return repository.save(member);
+        Member savedMember = repository.save(member);
+
+        // 회원가입후 이벤트를 발생
+        publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
+        return savedMember;
     }
 
     public Member oauth2CreateMember(Member member){

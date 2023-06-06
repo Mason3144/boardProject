@@ -44,10 +44,26 @@ jwt:
     secret: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 420
-mail:
-  address:
-    admin: admin@admin.com
 cloud:
   s3:
     access-id: ${S3_BOARD_PROJECT_ACCESS_KEY}
     secret-key: ${S3_BOARD_PROJECT_SECRET_KEY}
+mail:
+  address:
+    admin: admin@admin.com
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_SMTP_USERNAME}  # 민감한 정보는 시스템 환경 변수로..
+    password: ${GMAIL_SMTP_PASSWORD}  # 민감한 정보는 시스템 환경 변수로..
+    auth: true
+    starttls:
+      enable: true
+  subject:
+    member:
+      registration: Thank you for joining!
+  template:
+    name:
+      member:
+        join: email-registration-member
+URL: "http://localhost:8080"

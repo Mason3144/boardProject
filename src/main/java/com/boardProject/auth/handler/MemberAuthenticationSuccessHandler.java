@@ -43,6 +43,11 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         Member member = getMember(authResult);
 
+        createAndApplyTokens(response, member);
+    }
+
+    // 이메일 인증시 JWT발행을 위해 메서드를 분리
+    public void createAndApplyTokens(HttpServletResponse response, Member member) throws IOException {
         String accessToken = delegateAccessToken(member);
         String refreshToken = delegateRefreshToken(member);
 
@@ -57,6 +62,8 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(gson.toJson(responseObj, LoginDto.Response.class));
     }
+
+
     private Member getMember(Authentication authResult){
         var user = authResult.getPrincipal();
 

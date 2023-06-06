@@ -11,6 +11,7 @@ public enum ExceptionCode {
     MEMBER_IS_OAUTH2USER(403, "Member is an Oauth2 user"),
     POST_NOT_FOUND(404, "Post not found"),
     COMMENT_NOT_FOUND(404, "Comment not found"),
+    VERIFICATION_NOT_FOUND(404,"Verification not found"),
     NOT_IMPLEMENTATION(501, "Not Implementation"),
     INVALID_MEMBER_STATUS(400, "Invalid member status");
 

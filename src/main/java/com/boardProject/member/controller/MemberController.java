@@ -32,8 +32,6 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity postMember(@RequestBody @Valid MemberDto.Post requestBody){
-        // email verification needed
-        // social login create member needed
         Member memberCreated = service.createMember(mapper.memberPostToMember(requestBody));
 
         URI location = UriCreator.createUri(UriCreator.DefaultUrl.MEMBER_DEFAULT_URL.getUrl(),memberCreated.getMemberId());

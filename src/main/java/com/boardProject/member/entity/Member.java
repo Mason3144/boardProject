@@ -6,6 +6,7 @@ import com.boardProject.audit.Auditable;
 import com.boardProject.board.entity.Comment;
 import com.boardProject.board.entity.Likes;
 import com.boardProject.board.entity.Posts;
+import com.boardProject.emailVerification.entity.EmailVerification;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,8 +38,12 @@ public class Member extends Auditable {
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
+
+    // @ElementCollection 사용시 DB에 중복검열이 안된다... 해당 어플리케이션과 같이 계속해서 중복된 값들을 사용할 경우에는 사용을 권장하지 않음
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
+    @OneToOne(mappedBy = "member", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private EmailVerification emailVerification;
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Posts> posts = new ArrayList<>();
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
@@ -46,6 +51,10 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new LinkedList<>();
 
+    public void setEmailVerification(EmailVerification emailVerification){
+        this.emailVerification = emailVerification;
+        if(emailVerification.getMember()!=this) emailVerification.setMember(this);
+    }
     public void setComments(Comment comment){
         this.comments.add(comment);
         if(comment.getMember()!=this) comment.setMember(this);
