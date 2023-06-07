@@ -48,7 +48,6 @@ public class MemberDetailsService implements UserDetailsService {
             setName(member.getName());
             setPassword(member.getPassword());
             setRoles(member.getRoles());
-            setPicture(member.getPicture());
         }
 
         @Override

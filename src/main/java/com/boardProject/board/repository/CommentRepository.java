@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query("select c from Comment c where c.commentId = :commentId and not (c.commentStatus = 'COMMENT_DELETED')")
+    @Query("select c from Comment c join fetch c.member where c.commentId = :commentId and not (c.commentStatus = 'COMMENT_DELETED')")
     Optional<Comment> findById(Long commentId);
 }

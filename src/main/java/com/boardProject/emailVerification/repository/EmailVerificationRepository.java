@@ -15,6 +15,6 @@ public interface EmailVerificationRepository extends JpaRepository<EmailVerifica
 
     // PasswordEncoder의 단방향 암호화를 사용하여 보안을 더 강화할 수 있지만 대부분의 사용자들은 회원가입과 동시에 이메일 인증을 하며
     // 인증이후 해당 인증코드는 만료가 되기때문에 불필요하다 판단
-    @Query("select e from EmailVerification e where e.code = :code and e.verified = FALSE")
+    @Query("select e, m from EmailVerification e join fetch e.member m where e.code = :code and e.verified = FALSE")
     Optional<EmailVerification> findByCode(String code);
 }

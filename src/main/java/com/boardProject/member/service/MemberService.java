@@ -38,18 +38,19 @@ public class MemberService {
         return new EmailVerification(RandomKeyGen.generateVerificationCode());
     }
 
-    public Member createMember(Member member){
+    public Member createMember(Member member) throws InterruptedException {
         existsEmailChecker(member.getEmail());
 
         member.setSocialLogin(false);
         member.setEmailVerification(createEmailVerification());
 
+
         encodePassword(member);
 
         Member savedMember = repository.save(member);
 
-        // 회원가입후 이벤트를 발생
         publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
+
         return savedMember;
     }
 
@@ -83,6 +84,7 @@ public class MemberService {
 
     public Member findMember(long memberId){
         LoggedInMemberUtils.verifyIsMineException(memberId);
+
         return findExistsMember(memberId);
     }
 

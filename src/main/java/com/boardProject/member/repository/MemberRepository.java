@@ -10,6 +10,9 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
 
-    @Query("select m from Member m where m.memberId = :memberId and not (m.memberStatus = 'MEMBER_QUIT')")
+//    @Query("select m from Member m where m.memberId = :memberId and not (m.memberStatus = 'MEMBER_QUIT')")
+//    Optional<Member> findById(Long memberId);
+
+    @Query("select m, e.verified from Member m join fetch m.emailVerification e join fetch m.roles where m.memberId = :memberId and not (m.memberStatus = 'MEMBER_QUIT')")
     Optional<Member> findById(Long memberId);
 }

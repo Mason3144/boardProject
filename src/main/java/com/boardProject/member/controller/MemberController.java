@@ -31,7 +31,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity postMember(@RequestBody @Valid MemberDto.Post requestBody){
+    public ResponseEntity postMember(@RequestBody @Valid MemberDto.Post requestBody) throws InterruptedException {
         Member memberCreated = service.createMember(mapper.memberPostToMember(requestBody));
 
         URI location = UriCreator.createUri(UriCreator.DefaultUrl.MEMBER_DEFAULT_URL.getUrl(),memberCreated.getMemberId());
@@ -42,7 +42,6 @@ public class MemberController {
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
                                       @RequestBody @Valid MemberDto.Patch requestBody){
-        // profile photo update needed
         requestBody.setMemberId(memberId);
 
         Member updatedMember = service.updateMember(mapper.memberPatchToMember(requestBody));

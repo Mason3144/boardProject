@@ -32,8 +32,6 @@ public class Member extends Auditable {
     private String password;
     @Column
     private boolean socialLogin;
-    @Column
-    private String picture=null;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)

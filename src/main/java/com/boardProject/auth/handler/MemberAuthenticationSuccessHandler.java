@@ -2,19 +2,13 @@ package com.boardProject.auth.handler;
 
 import com.boardProject.auth.dto.LoginDto;
 import com.boardProject.auth.jwt.JwtTokenizer;
-import com.boardProject.auth.utils.CustomAuthorityUtils;
-import com.boardProject.exception.errorResponse.ErrorResponse;
 import com.boardProject.member.entity.Member;
 import com.boardProject.member.service.MemberService;
 import com.google.gson.Gson;
-import jdk.jfr.ContentType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -81,11 +75,9 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
-        String picture = oAuth2User.getAttribute("picture");
 
         member.setEmail(email);
         member.setName(name);
-        member.setPicture(picture);
         member.setSocialLogin(true);
 
         return memberService.oauth2CreateMember(member);
@@ -97,7 +89,6 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         claims.put("roles", member.getRoles());
         claims.put("name", member.getName());
         claims.put("memberId", member.getMemberId());
-        claims.put("picture", member.getPicture());
 
         String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());

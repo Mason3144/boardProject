@@ -67,13 +67,9 @@ public class PostsService {
         foundPost.setViews();
 
         foundPost.getLikes();
-
         return repository.save(foundPost);
     }
     public Page<Posts> getPosts(int page, int size){
-        // postStatus 확인하여 delete 인경우 제외시키기 ,jpql
-        // n+1문제 해결
-
         return repository.findAll(PageRequest.of(page, size,
                 Sort.by("postId").descending()));
     }

@@ -27,7 +27,6 @@ public class EmailVerificationService {
 
     public Member verifyEmail(String code){
         EmailVerification verification = findExistsVerification(code);
-
         verification.setVerified(true);
         Member member = verification.getMember();
 
@@ -35,7 +34,6 @@ public class EmailVerificationService {
         member.setRoles(customAuthorityUtils.createRoles(member.getEmail()));
 
         EmailVerification test = repository.save(verification);
-
         return member;
     }
     private EmailVerification findExistsVerification(String code){
