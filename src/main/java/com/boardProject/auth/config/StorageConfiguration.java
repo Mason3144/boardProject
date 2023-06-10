@@ -22,11 +22,13 @@ public class StorageConfiguration {
         this.env = env;
     }
 
+    // root directory
     @Bean
     public StorageService fileSystemStorageService() {
         return new FileSystemStorageService();
     }
 
+    // S3 directory
     @Primary
     @Bean
     public StorageService s3StorageService() {

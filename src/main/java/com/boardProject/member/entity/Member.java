@@ -70,8 +70,8 @@ public class Member extends Auditable {
 
     public enum MemberStatus{
         MEMBER_ACTIVE("활동중"),
-        MEMBER_SLEEP("활동 중지"),
-        MEMBER_QUIT("활동 정지");
+        MEMBER_SLEEP("휴면 계정"),
+        MEMBER_QUIT("탈퇴 계정");
         @Getter
         private String status;
 

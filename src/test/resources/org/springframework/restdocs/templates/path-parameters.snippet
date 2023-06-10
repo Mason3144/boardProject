@@ -1,0 +1,11 @@
+|===
+    |파라미터명|필수값 여부|설명|제약 조건
+
+{{#parameters}}
+    |{{#tableCellContent}}`+{{name}}+`{{/tableCellContent}}
+    |{{#tableCellContent}}{{^optional}}true{{/optional}}{{#optional}}false{{/optional}}{{/tableCellContent}}
+    |{{#tableCellContent}}{{description}}{{/tableCellContent}}
+    |{{#tableCellContent}}{{#constraints}}{{.}}{{/constraints}}{{/tableCellContent}}
+{{/parameters}}
+
+|===

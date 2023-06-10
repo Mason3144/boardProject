@@ -1,17 +1,22 @@
 # 게시판 프로젝트
 
+## Todo
+멤버 테스트에서 validation 문서에 표시하기
+
 ## 공통 기능
 - [x] 예외처리
 - [x] 공통 Dto
 - [ ] 테스트코드 작성
+  - Mock test
 - [ ] API 문서 생성
+  - RestDocs 이용
 - [x] Spring Security 적용
   - [x] JWT를 이용한 인증 및 인가 처리
   - [x] Google Social Login 기능 
 
 ## 공통 개선사항
 - [x] n+1 문제
-  - [x] JPQL의 fetch join 활용
+  - JPQL의 fetch join 활용
 
 ## 회원 기능
 - [x] Entity 작성
@@ -43,10 +48,4 @@
 - [x] 댓글 기능, 댓글 갯수
 - [x] 좋아요 기능, 좋아요 갯수
 - [x] 첨부파일 업로드
-  -      //진행중 발생한 에러들 블로그에 기제
-        // @RequestPart(required = false), imsomnia는 안됨
-        // roll back 이후에 s3 connection pool shutdown 됨
-        // 같은 파일이름을 가진 파일을 s3에 업로드할경우 덮어쓰기가됨
-        // https://wakestand.tistory.com/300
-        // 엔티티에 builder 사용금지!!!
 
