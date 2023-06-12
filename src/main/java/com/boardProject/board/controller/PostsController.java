@@ -53,7 +53,7 @@ public class PostsController {
 
         URI location = UriCreator.createUri(UriCreator.DefaultUrl.POST_DEFAULT_URL.getUrl(),updatedPost.getPostId());
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.ok().header("Location", String.valueOf(location)).build();
     }
 
 

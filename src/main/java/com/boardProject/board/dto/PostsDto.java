@@ -1,6 +1,7 @@
 package com.boardProject.board.dto;
 
 import com.boardProject.board.entity.Comment;
+import com.boardProject.board.entity.Photos;
 import com.boardProject.board.entity.Posts;
 import com.boardProject.member.dto.MemberDto;
 import com.boardProject.validator.notSpace.NotSpace;
@@ -62,6 +63,7 @@ public class PostsDto {
         private LocalDateTime createdAt;
         private LikeDto.ResponseOnPost likes;
         private List<CommentDto.Response> comments;
+        private List<PhotoDto.Response> photos;
         private boolean isMine;
     }
 }

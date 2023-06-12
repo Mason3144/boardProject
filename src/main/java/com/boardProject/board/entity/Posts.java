@@ -60,9 +60,9 @@ public class Posts extends Auditable {
 
 
     public enum PostStatus{
-        POST_PUBLIC("public post"),
-        POST_PRIVATE("private post"),
-        POST_DELETED("deleted post");
+        POST_PUBLIC("POST_PUBLIC"),
+        POST_PRIVATE("POST_PRIVATE"),
+        POST_DELETED("POST_DELETED");
 
         private String status;
 

@@ -2,6 +2,7 @@ package com.boardProject.helper;
 
 import com.google.gson.Gson;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.ParameterDescriptor;
@@ -9,11 +10,13 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -21,6 +24,16 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 
 public interface ControllerTestHelper<T> {
+
+    default RequestBuilder multipartRequestBuilder(String url,
+                                              String content) {
+        return  RestDocumentationRequestBuilders.multipart(url)
+                .file(StubData.MockPost.getMockImgFile())
+                .file(StubData.MockPost.getMockJsonFile(content))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf());
+    }
+
     default RequestBuilder postRequestBuilder(String url,
                                               String content) {
         return  post(url)
@@ -29,6 +42,18 @@ public interface ControllerTestHelper<T> {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
     }
+    default RequestBuilder postPostsRequestBuilder(String url,
+                                              String content) {
+        return  post(url)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.MULTIPART_FORM_DATA)
+                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .content(content);
+    }
+
+
 
     default RequestBuilder patchRequestBuilder(String url, long resourceId, String content) {
         return patch(url, resourceId)
@@ -119,11 +144,18 @@ public interface ControllerTestHelper<T> {
     }
 
     default List<ParameterDescriptor> getDefaultRequestParameterDescriptors() {
-        return List.of(
-                parameterWithName("page").description("Page 번호"),
-                parameterWithName("size").description("Page Size")
-        );
+        List<ParameterDescriptor> list = new ArrayList<>();
+        list.add(parameterWithName("page").description("Page 번호").attributes(key("constraints").value("0이상 정수")));
+        list.add(parameterWithName("size").description("Page Size").attributes(key("constraints").value("0이상 정수")));
+        return list;
     }
+    default List<ParameterDescriptor> getSearchRequestParameterDescriptors() {
+        List<ParameterDescriptor> pageInfo = getDefaultRequestParameterDescriptors();
+        pageInfo.add(parameterWithName("keyword").description("keyword"));
+
+        return pageInfo;
+    }
+
     enum DataResponseType {
         SINGLE, LIST
     }
