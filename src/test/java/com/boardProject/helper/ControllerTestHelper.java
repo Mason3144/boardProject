@@ -42,6 +42,14 @@ public interface ControllerTestHelper<T> {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
     }
+    default RequestBuilder postRequestBuilder(String url, MultiValueMap<String, String> queryParams) {
+        return post(url)
+                .params(
+                        queryParams
+                )
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON);
+    }
     default RequestBuilder postPostsRequestBuilder(String url,
                                               String content) {
         return  post(url)

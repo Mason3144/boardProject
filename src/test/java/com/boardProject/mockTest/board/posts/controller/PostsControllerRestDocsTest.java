@@ -7,12 +7,11 @@ import com.boardProject.board.entity.Posts;
 import com.boardProject.board.mapper.PostsMapper;
 import com.boardProject.board.service.PostsService;
 import com.boardProject.helper.StubData;
-import com.boardProject.helper.member.PostsControllerTestHelper;
+import com.boardProject.helper.posts.PostsControllerTestHelper;
 import com.boardProject.member.dto.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,15 +19,10 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.JsonFieldType;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,7 +30,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
-import static com.boardProject.helper.StubData.MockPost.getMockImgFile;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;

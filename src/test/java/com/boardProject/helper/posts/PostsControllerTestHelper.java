@@ -1,4 +1,4 @@
-package com.boardProject.helper.member;
+package com.boardProject.helper.posts;
 
 import com.boardProject.board.dto.PostsDto;
 import com.boardProject.helper.ControllerTestHelper;

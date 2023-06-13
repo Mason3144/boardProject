@@ -62,15 +62,26 @@ public class StubData {
     }
     public static class MockLike{
         private static final Map<HttpMethod, LikeDto.ResponseOnPost> stubResponseBodyOnPost;
+        private static final Map<HttpMethod, LikeDto.ResponseOnToggle> stubResponseBody;
         static{
             stubResponseBodyOnPost = new HashMap<>();
+            stubResponseBody = new HashMap<>();
             stubResponseBodyOnPost.put(HttpMethod.GET, LikeDto.ResponseOnPost.builder()
                             .totalLikes(1)
                             .isLiked(true)
                     .build());
+
+            stubResponseBody.put(HttpMethod.POST, LikeDto.ResponseOnToggle.builder()
+                    .isLiked(true)
+                    .postId(1)
+                    .memberId(1)
+                    .build());
         }
-        public static LikeDto.ResponseOnPost getResponseBody(HttpMethod httpMethod){
+        public static LikeDto.ResponseOnPost stubResponseBodyOnPost(HttpMethod httpMethod){
             return stubResponseBodyOnPost.get(httpMethod);
+        }
+        public static LikeDto.ResponseOnToggle stubResponseBody(HttpMethod httpMethod){
+            return stubResponseBody.get(httpMethod);
         }
 
     }
@@ -127,7 +138,7 @@ public class StubData {
                     .content("Content Text")
                     .postStatus(Posts.PostStatus.POST_PUBLIC)
                     .createdAt(LocalDateTime.of(2021, 1, 1, 0, 0, 0))
-                    .likes(MockLike.getResponseBody(HttpMethod.GET))
+                    .likes(MockLike.stubResponseBodyOnPost(HttpMethod.GET))
                     .comments(List.of(MockComment.getResponseBody(HttpMethod.GET)))
                     .photos(List.of(PhotoDto.Response.builder().photoId(1).filePath("http://filepath").build()))
                     .isMine(true)
