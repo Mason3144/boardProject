@@ -50,17 +50,16 @@ public interface ControllerTestHelper<T> {
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .accept(MediaType.APPLICATION_JSON);
     }
-    default RequestBuilder postPostsRequestBuilder(String url,
-                                              String content) {
-        return  post(url)
+    default RequestBuilder postRequestBuilder(String url, String content, MultiValueMap<String, String> queryParams) {
+        return post(url)
+                .params(
+                        queryParams
+                )
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .accept(MediaType.APPLICATION_JSON)
-                .accept(MediaType.MULTIPART_FORM_DATA)
                 .contentType(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .content(content);
     }
-
 
 
     default RequestBuilder patchRequestBuilder(String url, long resourceId, String content) {
@@ -113,44 +112,6 @@ public interface ControllerTestHelper<T> {
         return content;
     }
 
-    default String getDataParentPath(DataResponseType dataResponseType) {
-        return dataResponseType == DataResponseType.SINGLE ? "data." : "data[].";
-    }
-
-    default List<FieldDescriptor> getFullResponseDescriptors(List<FieldDescriptor> dataResponseFieldDescriptors) {
-        Stream<FieldDescriptor> defaultResponseDescriptors = getDefaultResponseDescriptors(JsonFieldType.OBJECT).stream();
-        Stream<FieldDescriptor> dataResponseDescriptors = dataResponseFieldDescriptors.stream();
-        return Stream.concat(defaultResponseDescriptors, dataResponseDescriptors)
-                .collect(Collectors.toList());
-    }
-
-    default List<FieldDescriptor> getFullPageResponseDescriptors(List<FieldDescriptor> dataResponseFieldDescriptors) {
-        Stream<FieldDescriptor> defaultResponseDescriptors = getDefaultResponseDescriptors(JsonFieldType.ARRAY).stream();
-        Stream<FieldDescriptor> dataResponseDescriptors = dataResponseFieldDescriptors.stream();
-        Stream<FieldDescriptor> pageResponseDescriptors = getPageResponseDescriptors().stream();
-
-        Stream<FieldDescriptor> mergedStream =
-                Stream.of(defaultResponseDescriptors, dataResponseDescriptors, pageResponseDescriptors)
-                        .flatMap(descriptorStream -> descriptorStream);
-        return mergedStream.collect(Collectors.toList());
-    }
-
-    default List<FieldDescriptor> getDefaultResponseDescriptors(JsonFieldType jsonFieldTypeForData) {
-        return Arrays.asList(
-                fieldWithPath("data").type(jsonFieldTypeForData).description("결과 데이터").optional()
-        );
-    }
-
-    default List<FieldDescriptor> getPageResponseDescriptors() {
-        return Arrays.asList(
-                fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이지 정보").optional(),
-                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("페이지 번호").optional(),
-                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 사이즈").optional(),
-                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("전체 건 수").optional(),
-                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 수").optional()
-        );
-    }
-
     default List<ParameterDescriptor> getDefaultRequestParameterDescriptors() {
         List<ParameterDescriptor> list = new ArrayList<>();
         list.add(parameterWithName("page").description("Page 번호").attributes(key("constraints").value("0이상 정수")));
@@ -164,7 +125,5 @@ public interface ControllerTestHelper<T> {
         return pageInfo;
     }
 
-    enum DataResponseType {
-        SINGLE, LIST
-    }
+
 }

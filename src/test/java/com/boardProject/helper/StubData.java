@@ -88,6 +88,7 @@ public class StubData {
 
     public static class MockComment{
         private static final Map<HttpMethod, CommentDto.Response> stubResponseBody;
+        private static final Map<HttpMethod, Object> stubRequestBody;
         static{
             stubResponseBody = new HashMap<>();
             stubResponseBody.put(HttpMethod.GET, CommentDto.Response.builder()
@@ -96,9 +97,24 @@ public class StubData {
                                 .postId(1)
                                 .comment("Comment Text")
                                 .build());
+
+            stubRequestBody = new HashMap<>();
+            stubRequestBody.put(HttpMethod.POST, CommentDto.Post.builder()
+                    .postId(1L)
+                    .content("Comment Content")
+                    .build());
+            stubRequestBody.put(HttpMethod.PATCH, CommentDto.Patch.builder()
+                    .commentId(1L)
+                    .content("Comment Content")
+                    .build());
+
         }
+
         public static CommentDto.Response getResponseBody(HttpMethod httpMethod){
             return stubResponseBody.get(httpMethod);
+        }
+        public static Object getRequestBody(HttpMethod httpMethod){
+            return stubRequestBody.get(httpMethod);
         }
 
     }

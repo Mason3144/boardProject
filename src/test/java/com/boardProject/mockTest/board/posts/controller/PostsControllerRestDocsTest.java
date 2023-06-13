@@ -134,7 +134,7 @@ public class PostsControllerRestDocsTest implements PostsControllerTestHelper {
                                 getPostsPathParameterDescriptor()
                         ),
                         responseFields(
-                                getPostsResponseOnPostDescriptor()
+                                getFullResponseDescriptors()
                         )
                 ));
     }
@@ -169,7 +169,7 @@ public class PostsControllerRestDocsTest implements PostsControllerTestHelper {
                                 getDefaultRequestParameterDescriptors()
                         ),
                         responseFields(
-                                getPostsResponseOnBoardDescriptor()
+                                getFullPageResponseDescriptors()
                         )
                 ));
     }
@@ -206,7 +206,7 @@ public class PostsControllerRestDocsTest implements PostsControllerTestHelper {
                                 getSearchRequestParameterDescriptors()
                         ),
                         responseFields(
-                                getPostsResponseOnBoardDescriptor()
+                                getFullPageResponseDescriptors()
                         )
                 ));
     }
