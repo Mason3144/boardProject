@@ -18,9 +18,9 @@ public class Likes extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likesId;
     @ManyToOne
-    @JoinColumn(name = "POST_ID")
+    @JoinColumn(name = "POST_ID",nullable = false)
     private Posts posts;
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
+    @JoinColumn(name = "MEMBER_ID",nullable = false)
     private Member member;
 }

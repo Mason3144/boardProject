@@ -29,7 +29,7 @@ public class Posts extends Auditable {
     @Enumerated(value = EnumType.STRING)
     private PostStatus postStatus;
     @ManyToOne
-    @JoinColumn(name="MEMBER_ID")
+    @JoinColumn(name="MEMBER_ID",nullable = false)
     private Member member;
     @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
     private List<Likes> likes = new LinkedList<>();

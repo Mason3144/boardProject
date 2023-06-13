@@ -30,7 +30,7 @@ public class Member extends Auditable {
     private String name;
     @Column(length = 100) //password는 암호화되어 저장되기 때문에 열의 길이는 100으로 지정
     private String password;
-    @Column
+    @Column(nullable = false)
     private boolean socialLogin;
 
     @Enumerated(value = EnumType.STRING)

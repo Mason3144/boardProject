@@ -16,15 +16,15 @@ public class EmailVerification extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long emailVerificationId;
-    @Column
+    @Column(nullable = false)
     private String code;
 
     // 인증이 완료되면 true로 선언해주며 jpql을 이용하여 인증 완료된 코드는 검색에서 제외
-    @Column
+    @Column(nullable = false)
     private Boolean verified=false;
 
     @OneToOne
-    @JoinColumn(name="MEMBER_ID")
+    @JoinColumn(name="MEMBER_ID",nullable = false)
     Member member;
 
     public EmailVerification(String code) {

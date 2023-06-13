@@ -19,13 +19,13 @@ public class Comment extends Auditable {
     private long commentId;
     @Enumerated(value = EnumType.STRING)
     private CommentStatus commentStatus = CommentStatus.COMMENT_ALIVE;
-    @Column(columnDefinition = "TEXT") //  varchar 보다 사이즈가 큰 텍스트 정의
+    @Column(columnDefinition = "TEXT",nullable = false) //  varchar 보다 사이즈가 큰 텍스트 정의
     private String content;
     @ManyToOne
-    @JoinColumn(name = "POST_ID")
+    @JoinColumn(name = "POST_ID",nullable = false)
     private Posts posts;
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
+    @JoinColumn(name = "MEMBER_ID",nullable = false)
     private Member member;
 
     public enum CommentStatus{

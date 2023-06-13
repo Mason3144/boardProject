@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface PostsMapper extends PhotoMapper, CommentsMapper{
+public interface PostsMapper extends PhotoMapper{
     MemberDto.Response memberToMemberResponse(Member member);
     default PostsDto.ResponseOnBoard postToResponseOnBoard(Posts posts){
         Member postOwner = posts.getMember();
@@ -37,6 +37,14 @@ public interface PostsMapper extends PhotoMapper, CommentsMapper{
                 .build();
     }
 
+    default CommentDto.Response commentToCommentResponseDto(Comment comment){
+        return CommentDto.Response.builder()
+                .commentId(comment.getCommentId())
+                .comment(comment.getContent())
+                .postId(comment.getPosts().getPostId())
+                .memberId(comment.getMember().getMemberId())
+                .build();
+    }
     default PostsDto.ResponseOnPost postsToResponseOnPost(Posts posts){
         Member postOwner = posts.getMember();
 
